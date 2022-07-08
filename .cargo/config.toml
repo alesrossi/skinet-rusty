@@ -1,0 +1,2 @@
+[env]
+DATABASE_URL="postgres://root:secret@localhost:5433/skinet"
