@@ -1,0 +1,892 @@
+openapi: 3.0.1
+info:
+  title: API
+  version: v1
+paths:
+  /api/Account:
+    get:
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+  /api/Account/emailexists:
+    get:
+      tags:
+        - Account
+      parameters:
+        - name: email
+          in: query
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: boolean
+            application/json:
+              schema:
+                type: boolean
+            text/json:
+              schema:
+                type: boolean
+  /api/Account/address:
+    get:
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+    put:
+      tags:
+        - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AddressDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AddressDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+  /api/Account/login:
+    post:
+      tags:
+        - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+  /api/Account/register:
+    post:
+      tags:
+        - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+  /api/Basket:
+    get:
+      tags:
+        - Basket
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+    post:
+      tags:
+        - Basket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerBasketDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CustomerBasketDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CustomerBasketDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+    delete:
+      tags:
+        - Basket
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Success
+  /api/Buggy/testauth:
+    get:
+      tags:
+        - Buggy
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /api/Buggy/notfound:
+    get:
+      tags:
+        - Buggy
+      responses:
+        '200':
+          description: Success
+  /api/Buggy/servererror:
+    get:
+      tags:
+        - Buggy
+      responses:
+        '200':
+          description: Success
+  /api/Buggy/badrequestmethod:
+    get:
+      tags:
+        - Buggy
+      responses:
+        '200':
+          description: Success
+  /api/Buggy/badrequestmethod/{id}:
+    get:
+      tags:
+        - Buggy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  /api/Orders:
+    post:
+      tags:
+        - Orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/OrderDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/OrderDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+    get:
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+  /api/Orders/{id}:
+    get:
+      tags:
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OrderToReturnDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderToReturnDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OrderToReturnDto'
+  /api/Orders/deliveryMethods:
+    get:
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeliveryMethod'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeliveryMethod'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeliveryMethod'
+  /api/Payments/{basketId}:
+    post:
+      tags:
+        - Payments
+      parameters:
+        - name: basketId
+          in: path
+          required: true
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBasket'
+  /api/Payments/webhook:
+    post:
+      tags:
+        - Payments
+      responses:
+        '200':
+          description: Success
+  /api/Products:
+    get:
+      tags:
+        - Products
+      parameters:
+        - name: PageIndex
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: PageSize
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: BrandId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+        - name: TypeId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+        - name: Sort
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: Search
+          in: query
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDtoPagination'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDtoPagination'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDtoPagination'
+  /api/Products/{id}:
+    get:
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProductToReturnDto'
+  /api/Products/brands:
+    get:
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductBrand'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductBrand'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductBrand'
+  /api/Products/types:
+    get:
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductType'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductType'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductType'
+components:
+  schemas:
+    UserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        displayName:
+          type: string
+          nullable: true
+        token:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AddressDto:
+      required:
+        - city
+        - country
+        - firstName
+        - lastName
+        - postalCode
+        - street
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postalCode:
+          type: string
+      additionalProperties: false
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RegisterDto:
+      required:
+        - displayName
+        - email
+        - password
+      type: object
+      properties:
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          pattern: (?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$
+          type: string
+      additionalProperties: false
+    BasketItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        productName:
+          type: string
+          nullable: true
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+        pictureUrl:
+          type: string
+          nullable: true
+        brand:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CustomerBasket:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketItem'
+          nullable: true
+        deliveryMethodId:
+          type: integer
+          format: int32
+          nullable: true
+        clientSecret:
+          type: string
+          nullable: true
+        paymentIntentId:
+          type: string
+          nullable: true
+        shippingPrice:
+          type: number
+          format: double
+      additionalProperties: false
+    CustomerBasketDto:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketItem'
+          nullable: true
+        deliveryMethodId:
+          type: integer
+          format: int32
+          nullable: true
+        clientSecret:
+          type: string
+          nullable: true
+        paymentIntentId:
+          type: string
+          nullable: true
+        shippingPrice:
+          type: number
+          format: double
+      additionalProperties: false
+    OrderDto:
+      type: object
+      properties:
+        basketId:
+          type: string
+          nullable: true
+        deliveryMethodId:
+          maximum: 4
+          minimum: 1
+          type: integer
+          format: int32
+        shipToAddress:
+          $ref: '#/components/schemas/AddressDto'
+      additionalProperties: false
+    Address:
+      type: object
+      properties:
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        street:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        postalCode:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DeliveryMethod:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        shortName:
+          type: string
+          nullable: true
+        deliveryTime:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+          format: double
+      additionalProperties: false
+    ProductItemOrdered:
+      type: object
+      properties:
+        productItemId:
+          type: integer
+          format: int32
+        productName:
+          type: string
+          nullable: true
+        pictureUrl:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        itemOrdered:
+          $ref: '#/components/schemas/ProductItemOrdered'
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+      additionalProperties: false
+    OrderStatus:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        buyerEmail:
+          type: string
+          nullable: true
+        orderDate:
+          type: string
+          format: date-time
+        shipToAddress:
+          $ref: '#/components/schemas/Address'
+        deliveryMethod:
+          $ref: '#/components/schemas/DeliveryMethod'
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          nullable: true
+        subtotal:
+          type: number
+          format: double
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        paymentIntentId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OrderItemDto:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int32
+        productName:
+          type: string
+          nullable: true
+        pictureUrl:
+          type: string
+          nullable: true
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+      additionalProperties: false
+    OrderToReturnDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        buyerEmail:
+          type: string
+          nullable: true
+        orderDate:
+          type: string
+          format: date-time
+        shipToAddress:
+          $ref: '#/components/schemas/Address'
+        deliveryMethod:
+          type: string
+          nullable: true
+        shippingPrice:
+          type: number
+          format: double
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDto'
+          nullable: true
+        subtotal:
+          type: number
+          format: double
+        status:
+          type: string
+          nullable: true
+        total:
+          type: number
+          format: double
+      additionalProperties: false
+    ProductToReturnDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+          format: double
+        pictureUrl:
+          type: string
+          nullable: true
+        productType:
+          type: string
+          nullable: true
+        productBrand:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProductToReturnDtoPagination:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        count:
+          type: integer
+          format: int32
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductToReturnDto'
+          nullable: true
+      additionalProperties: false
+    ProductBrand:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProductType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: http
+      description: JWT Auth Bearer Scheme
+      scheme: bearer
+security:
+  - Bearer:
+      - Bearer

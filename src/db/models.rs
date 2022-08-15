@@ -13,3 +13,15 @@ pub struct NewProduct<'a> {
     pub name: &'a str,
     pub cost: &'a i32,
 }
+
+#[derive(Queryable, Serialize)]
+pub struct ProductBrand {
+    pub id: i32,
+    pub name: String,
+}
+
+#[derive(Queryable, Serialize)]
+pub struct ProductType {
+    pub id: i32,
+    pub name: String,
+}
