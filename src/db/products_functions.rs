@@ -11,7 +11,6 @@ pub fn get_products(connection: &PgConnection) -> Vec<Product> {
         .load::<Product>(connection)
         .expect("Error loading posts")
 
-
 }
 
 pub fn get_product(id: i32, connection: &PgConnection) -> Result<Json<Product>, NotFound<String>> {

@@ -5,8 +5,7 @@ pub mod products_functions;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use std::env;
-use crate::db::models::{NewProduct, Product};
-use crate::db::schema::products::dsl::products;
+
 
 pub fn establish_connection() -> PgConnection {
     let database_url = env!("DATABASE_URL").to_string();
