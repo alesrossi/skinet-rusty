@@ -1,12 +1,17 @@
 #[macro_use]
 extern crate diesel;
+#[macro_use] extern crate rocket;
 
-use crate::db::{create_poduct, establish_connection, read_products};
-
+use crate::db::{create_poduct, establish_connection};
+use crate::products_controller::get_all;
 mod db;
+mod products_controller;
 
-fn main() {
-    let connection = establish_connection();
-    // create_poduct(&connection, "Batteria", &12);
-    read_products(&connection);
+#[launch]
+fn rocket() -> _ {
+    rocket::build()
+        .mount("/products", routes![
+            get_all
+        ])
+
 }

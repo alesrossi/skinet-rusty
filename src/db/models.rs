@@ -1,5 +1,6 @@
 use super::schema::products;
-#[derive(Queryable)]
+use serde::Serialize;
+#[derive(Queryable, Serialize)]
 pub struct Product {
     pub id: i32,
     pub name: String,

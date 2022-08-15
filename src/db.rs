@@ -1,6 +1,7 @@
-
 pub mod schema;
 pub mod models;
+pub mod products_functions;
+
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use std::env;
@@ -13,20 +14,7 @@ pub fn establish_connection() -> PgConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn read_products(connection: &PgConnection,) {
 
-    let results = products
-        .limit(5)
-        .load::<Product>(connection)
-        .expect("Error loading posts");
-
-    println!("Displaying {} posts", results.len());
-    for product in results {
-        println!("{}", product.name);
-        println!("----------\n");
-        println!("{}", product.cost);
-    }
-}
 
 pub fn create_poduct<'a>(conn: &PgConnection, name: &'a str, cost: &'a i32) -> Product {
     use schema::products;
