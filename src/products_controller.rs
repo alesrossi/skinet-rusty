@@ -1,14 +1,15 @@
-use rocket::http::{ContentType, Header};
+
 use rocket::response::status::NotFound;
 use rocket::serde::json::Json;
 use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::products_functions::*;
 use crate::establish_connection;
+use crate::db::products_functions::Params;
 
-#[get("/")]
-pub fn get_all_products() -> Json<Vec<Product>> {
+#[get("/?<name>")]
+pub fn get_all_products(name: Option<String>) -> Result<Json<Vec<Product>>, NotFound<String>> {
     let conn = establish_connection();
-    Json(get_products(&conn))
+    get_products_with_params(&conn, Params{name: name.clone(), sort_by: None })
 }
 
 #[get("/<id>")]
