@@ -4,7 +4,6 @@ use rocket::serde::json::Json;
 use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
-// use crate::db::schema::products::dsl::products;
 use crate::db::schema::products;
 use crate::db::paginate::LoadPaginated;
 use crate::PaginatedResult;
