@@ -9,22 +9,28 @@ use crate::db::products_functions::Params;
 pub type PaginatedResult = Result<Json<(Vec<Product>, i64)>, NotFound<String>>;
 
 
-#[get("/?<name>&<brand_id>&<type_id>&<sort_by>")]
+#[get("/?<sort>&<brandId>&<typeId>&<name>&<pageIndex>&<pageSize>")]
 pub fn get_all_products
 (
+    sort: Option<String>,
+    #[allow(non_snake_case)]
+    brandId: Option<i32>,
+    #[allow(non_snake_case)]
+    typeId: Option<i32>,
     name: Option<String>,
-    brand_id: Option<i32>,
-    type_id: Option<i32>,
-    sort_by: Option<String>
+    #[allow(non_snake_case)]
+    pageIndex: Option<i64>,
+    #[allow(non_snake_case)]
+    pageSize: Option<i64>,
 ) -> PaginatedResult {
     let conn = establish_connection();
     get_products_with_params(&conn, Params{
+        sort: sort.clone(),
+        brand_id: brandId.clone(),
+        type_id: typeId.clone(),
         name: name.clone(),
-        brand_id: brand_id.clone(),
-        type_id: type_id.clone(),
-        sort_by: sort_by.clone(), 
-        page: None, 
-        page_size: None 
+        page_index: pageIndex.clone(),
+        page_size: pageSize.clone()
     })
 }
 

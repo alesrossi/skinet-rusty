@@ -11,11 +11,11 @@ use crate::{filter, sort_by};
 
 #[derive(Debug)]
 pub struct Params {
-    pub name: Option<String>,
+    pub sort: Option<String>,
     pub brand_id: Option<i32>,
     pub type_id: Option<i32>,
-    pub sort_by: Option<String>,
-    pub page: Option<i64>,
+    pub name: Option<String>,
+    pub page_index: Option<i64>,
     pub page_size: Option<i64>,
 }
 
@@ -54,7 +54,7 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
     );
 
     // sorting
-    query = sort_by!(query, params.sort_by,
+    query = sort_by!(query, params.sort,
             ("id", products::id),
             ("name", products::name),
             ("brand", products::productbrand),
@@ -64,7 +64,7 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
 
     // result
     let result = query
-        .load_with_pagination(connection, params.page, params.page_size);
+        .load_with_pagination(connection, params.page_index, params.page_size);
 
     match result {
         Ok(product) => {
