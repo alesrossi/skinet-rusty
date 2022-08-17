@@ -11,13 +11,6 @@ pub struct Product {
     pub product_type: i32,
 }
 
-// #[derive(Insertable)]
-// #[table_name="products"]
-// pub struct NewProduct<'a> {
-//     pub name: &'a str,
-//     pub cost: &'a f32,
-// }
-
 #[derive(Queryable, Serialize)]
 pub struct ProductBrand {
     pub id: i32,

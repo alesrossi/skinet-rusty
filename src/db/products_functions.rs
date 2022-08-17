@@ -12,6 +12,8 @@ use crate::{filter, sort_by};
 #[derive(Debug)]
 pub struct Params {
     pub name: Option<String>,
+    pub brand_id: Option<i32>,
+    pub type_id: Option<i32>,
     pub sort_by: Option<String>,
     pub page: Option<i64>,
     pub page_size: Option<i64>,
@@ -44,13 +46,20 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
 
     // filtering
     query = filter!(query,
-           (products::name, @like, params.name)
+           (products::name, @like, params.name),
+           (products::productbrand, @ge, params.brand_id),
+           (products::productbrand, @le, params.brand_id),
+           (products::producttype, @ge, params.type_id),
+           (products::producttype, @le, params.type_id)
     );
 
     // sorting
     query = sort_by!(query, params.sort_by,
-           ("id", products::id),
-           ("name", products::name)
+            ("id", products::id),
+            ("name", products::name),
+            ("brand", products::productbrand),
+            ("type", products::producttype),
+            ("cost", products::cost)
     );
 
     // result

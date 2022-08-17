@@ -14,19 +14,3 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
-
-
-
-// pub fn create_poduct<'a>(conn: &PgConnection, name: &'a str, cost: &'a i32) -> Product {
-//     use schema::products;
-//
-//     let new_post = NewProduct {
-//         name,
-//         cost,
-//     };
-//
-//     diesel::insert_into(products::table)
-//         .values(&new_post)
-//         .get_result(conn)
-//         .expect("Error saving new product")
-// }
