@@ -7,7 +7,7 @@ use crate::db::schema::product_types::dsl::product_types;
 use crate::db::schema::products;
 use crate::db::paginate::LoadPaginated;
 use crate::PaginatedResult;
-
+use crate::{filter, sort_by};
 
 #[derive(Debug)]
 pub struct Params {
@@ -43,23 +43,15 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
     let mut query = products::table.into_boxed();
 
     // filtering
-    if let Some(other_name) = params.name {
-        query = query.filter(products::name.like(other_name));
-    }
+    query = filter!(query,
+           (products::name, @like, params.name)
+    );
 
     // sorting
-    if let Some(sort_by) = params.sort_by {
-        println!("{}", sort_by);
-        query = match sort_by.as_ref() {
-            "id" => query.order(products::id.asc()),
-            "id.asc" => query.order(products::id.asc()),
-            "id.desc" => query.order(products::id.desc()),
-            "name" => query.order(products::name.asc()),
-            "name.asc" => query.order(products::name.asc()),
-            "name.desc" => query.order(products::name.desc()),
-            _ => query,
-        };
-    }
+    query = sort_by!(query, params.sort_by,
+           ("id", products::id),
+           ("name", products::name)
+    );
 
     // result
     let result = query
@@ -76,5 +68,4 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
         },
         Err(_) => Err(NotFound(String::from("Product Not Found"))),
     }
-
 }
