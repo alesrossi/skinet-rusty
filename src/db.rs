@@ -1,6 +1,7 @@
 pub mod schema;
 pub mod models;
 pub mod products_functions;
+pub mod paginate;
 
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
