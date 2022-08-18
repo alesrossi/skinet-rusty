@@ -1,6 +1,6 @@
 use serde::{Serialize};
 
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Product {
     pub id: i32,

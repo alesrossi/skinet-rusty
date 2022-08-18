@@ -4,7 +4,7 @@ use diesel::query_builder::*;
 use diesel::query_dsl::LoadQuery;
 use diesel::sql_types::{BigInt, HasSqlType};
 
-const DEFAULT_PAGE_SIZE: i64 = 10;
+const DEFAULT_PAGE_SIZE: i64 = 5;
 
 #[derive(QueryId)]
 pub struct Paginated<T> {
@@ -32,7 +32,7 @@ impl<T> Paginated<T> {
         Paginated { page_size, ..self }
     }
 
-    pub fn load_and_count_pages<U>(self, conn: &PgConnection) -> QueryResult<(Vec<U>, i64)>
+    pub fn load_and_count_pages<U>(self, conn: &PgConnection) -> QueryResult<(Vec<U>, i64, i64)>
         where
             Self: LoadQuery<PgConnection, (U, i64)>,
     {
@@ -41,12 +41,12 @@ impl<T> Paginated<T> {
         let total = results.get(0).map(|x| x.1).unwrap_or(0);
         let records = results.into_iter().map(|x| x.0).collect();
         let total_pages = (total as f64 / page_size as f64).ceil() as i64;
-        Ok((records, total_pages))
+        Ok((records, total_pages, page_size))
     }
 }
 
 pub trait LoadPaginated<U>: Query + QueryId + QueryFragment<Pg> + LoadQuery<PgConnection, U> {
-    fn load_with_pagination(self, conn: &PgConnection, page: Option<i64>, page_size: Option<i64>) -> QueryResult<(Vec<U>, i64)>;
+    fn load_with_pagination(self, conn: &PgConnection, page: Option<i64>, page_size: Option<i64>) -> QueryResult<(Vec<U>, i64, i64)>;
 }
 
 impl<T, U> LoadPaginated<U> for T
@@ -55,8 +55,8 @@ impl<T, U> LoadPaginated<U> for T
         U: Queryable<Self::SqlType, Pg>,
         Pg: HasSqlType<Self::SqlType>,
 {
-    fn load_with_pagination(self, conn: &PgConnection, page: Option<i64>, page_size: Option<i64>) -> QueryResult<(Vec<U>, i64)> {
-        let (records, total_pages) = match page {
+    fn load_with_pagination(self, conn: &PgConnection, page: Option<i64>, page_size: Option<i64>) -> QueryResult<(Vec<U>, i64, i64)> {
+        let (records, total_pages, page_size) = match page {
             Some(page) => {
                 let mut query = self.paginate(page);
                 if let Some(page_size) = page_size {
@@ -65,10 +65,10 @@ impl<T, U> LoadPaginated<U> for T
 
                 query.load_and_count_pages::<U>(conn)?
             },
-            None => (self.load::<U>(conn)?, 1),
+            None => (self.load::<U>(conn)?, 1, DEFAULT_PAGE_SIZE),
         };
 
-        Ok((records, total_pages))
+        Ok((records, total_pages, page_size))
     }
 }
 

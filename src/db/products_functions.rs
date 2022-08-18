@@ -6,8 +6,8 @@ use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
 use crate::db::schema::products;
 use crate::db::paginate::LoadPaginated;
-use crate::PaginatedResult;
 use crate::{filter, sort_by};
+use serde::{Serialize};
 
 #[derive(Debug)]
 pub struct Params {
@@ -17,6 +17,15 @@ pub struct Params {
     pub name: Option<String>,
     pub page_index: Option<i64>,
     pub page_size: Option<i64>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct PaginatedResult {
+    page_index: i64,
+    page_size: i64,
+    count: usize,
+    data: Vec<Product>
 }
 
 pub fn get_product(product_id: i32, connection: &PgConnection) -> Result<Json<Product>, NotFound<String>> {
@@ -64,17 +73,12 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
 
     // result
     let result = query
-        .load_with_pagination(connection, params.page_index, params.page_size);
+        .load_with_pagination(connection, params.page_index, params.page_size).unwrap();
 
-    match result {
-        Ok(product) => {
-            if product.0.is_empty() {
-                Err(NotFound(String::from("Product Not Found")))
-            } else {
-                Ok(Json(product))
-            }
-
-        },
-        Err(_) => Err(NotFound(String::from("Product Not Found"))),
+    PaginatedResult {
+        page_index: params.page_index.unwrap_or_else(|| 1),
+        page_size: result.2,
+        count: result.0.len(),
+        data: result.0
     }
 }

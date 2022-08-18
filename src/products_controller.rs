@@ -6,9 +6,6 @@ use crate::db::products_functions::*;
 use crate::establish_connection;
 use crate::db::products_functions::Params;
 
-pub type PaginatedResult = Result<Json<(Vec<Product>, i64)>, NotFound<String>>;
-
-
 #[get("/?<sort>&<brandId>&<typeId>&<name>&<pageIndex>&<pageSize>")]
 pub fn get_all_products
 (
@@ -22,16 +19,16 @@ pub fn get_all_products
     pageIndex: Option<i64>,
     #[allow(non_snake_case)]
     pageSize: Option<i64>,
-) -> PaginatedResult {
+) -> Json<PaginatedResult> {
     let conn = establish_connection();
-    get_products_with_params(&conn, Params{
+    Json(get_products_with_params(&conn, Params{
         sort: sort.clone(),
         brand_id: brandId.clone(),
         type_id: typeId.clone(),
         name: name.clone(),
         page_index: pageIndex.clone(),
         page_size: pageSize.clone()
-    })
+    }))
 }
 
 #[get("/<id>")]
