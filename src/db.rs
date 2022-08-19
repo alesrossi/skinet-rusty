@@ -3,6 +3,7 @@ pub mod models;
 pub mod products_functions;
 pub mod paginate;
 mod macros;
+pub mod redis;
 
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
@@ -14,3 +15,4 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
+

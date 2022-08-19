@@ -1,14 +1,16 @@
 #[macro_use]
 extern crate diesel;
-#[macro_use] extern crate rocket;
-
+#[macro_use]
+extern crate rocket;
 use rocket::fs::{FileServer, relative};
 use rocket::http::Method;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, CorsOptions};
 use crate::db::{establish_connection};
 use crate::products_controller::*;
+use crate::basket_controller::*;
 mod db;
 mod products_controller;
+mod basket_controller;
 
 #[launch]
 fn rocket() -> _ {
@@ -28,7 +30,13 @@ fn rocket() -> _ {
                routes![
             get_all_products, get_one, get_all_brands, get_all_types,
 
-        ]).attach(cors.to_cors().unwrap())
+        ])
+        .mount("/api/basket",
+               routes![
+            get_basket_from_id, return_basket
+
+        ])
+        .attach(cors.to_cors().unwrap())
 
 
 }
