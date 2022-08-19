@@ -2,8 +2,11 @@
 extern crate diesel;
 #[macro_use]
 extern crate rocket;
+#[macro_use]
+extern crate log;
 use rocket::fs::{FileServer, relative};
 use rocket::http::Method;
+use rocket::Request;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, CorsOptions};
 use crate::db::{establish_connection};
 use crate::products_controller::*;
@@ -11,6 +14,7 @@ use crate::basket_controller::*;
 mod db;
 mod products_controller;
 mod basket_controller;
+mod responders;
 
 #[launch]
 fn rocket() -> _ {
@@ -23,7 +27,8 @@ fn rocket() -> _ {
         allow_credentials: true,
         ..Default::default()
     };
-
+    env_logger::init();
+    debug!("Starting up");
     rocket::build()
         .mount("/", FileServer::from(relative!("static")))
         .mount("/api/products",
@@ -33,10 +38,17 @@ fn rocket() -> _ {
         ])
         .mount("/api/basket",
                routes![
-            get_basket_from_id, return_basket
+            get_basket_from_id, create_new_basket, delete_basket_from_id
 
         ])
+        .register("/api/basket", catchers![malformed])
         .attach(cors.to_cors().unwrap())
 
 
+}
+
+#[catch(422)]
+fn malformed(req: &Request) -> String {
+    debug!("{req:?}");
+    String::from("wtf")
 }
