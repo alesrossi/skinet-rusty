@@ -22,8 +22,8 @@ fn rocket() -> _ {
     let allowed_origins = AllowedOrigins::some_exact(&["https://localhost:4200"]);
     let cors = CorsOptions {
         allowed_origins,
-        allowed_methods: vec![Method::Get].into_iter().map(From::from).collect(),
-        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+        allowed_methods: vec![Method::Get, Method::Post, Method::Options, Method::Delete].into_iter().map(From::from).collect(),
+        allowed_headers: AllowedHeaders::All,
         allow_credentials: true,
         ..Default::default()
     };

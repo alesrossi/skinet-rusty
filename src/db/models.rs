@@ -5,7 +5,7 @@ use serde::{Serialize};
 pub struct Product {
     pub id: i32,
     pub name: String,
-    pub cost: f32,
+    pub price: f32,
     pub description: String,
     pub picture_url: String,
     pub product_brand: i32,

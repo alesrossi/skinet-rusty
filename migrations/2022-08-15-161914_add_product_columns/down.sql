@@ -5,4 +5,4 @@ ALTER TABLE products
     DROP COLUMN productBrand,
     DROP COLUMN productType,
 
-    ALTER COLUMN cost TYPE INTEGER;
+    ALTER COLUMN price TYPE INTEGER;

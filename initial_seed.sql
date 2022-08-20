@@ -16,7 +16,7 @@ values
     (4, 'Gloves')
 ;
 
-insert into products (id, name, cost, description, pictureurl, producttype, productbrand)
+insert into products (id, name, price, description, pictureurl, producttype, productbrand)
 values (
            DEFAULT,
            'Angular Speedster Board 2000',
@@ -172,7 +172,7 @@ values (
        ),
        (
            DEFAULT,
-           'Angular Purple Boots',
+           'Angular Blue Boots',
            180,
            'Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.',
            'images/products/boot-ang1.png',

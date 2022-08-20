@@ -16,7 +16,7 @@ table! {
     products (id) {
         id -> Int4,
         name -> Varchar,
-        cost -> Float4,
+        price -> Float4,
         description -> Varchar,
         pictureurl -> Varchar,
         productbrand -> Int4,

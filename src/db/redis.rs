@@ -9,11 +9,13 @@ use simple_redis::client::Client;
 pub struct BasketItem {
     pub id: u64,
     pub product_name:  String,
-    pub cost: f32,
+    pub price: f32,
     pub quantity: i32,
     pub picture_url: String,
-    pub product_brand: String,
-    pub product_type: String,
+    #[serde(alias = "brand")]
+    pub product_brand: i32,
+    #[serde(alias = "type")]
+    pub product_type: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

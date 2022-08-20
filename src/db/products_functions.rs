@@ -68,7 +68,7 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
             ("name", products::name),
             ("brand", products::productbrand),
             ("type", products::producttype),
-            ("cost", products::cost)
+            ("price", products::price)
     );
 
     // result
