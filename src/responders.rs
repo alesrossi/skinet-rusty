@@ -2,14 +2,14 @@
 use rocket::http::ContentType;
 
 #[derive(Responder)]
-pub enum ApiError<'r> {
+pub enum ApiError {
     #[response(status = 400)]
-    BadRequest(&'r str),
+    BadRequest(String),
     #[response(status = 401)]
-    Unauthorized(&'r str),
+    Unauthorized(String),
     #[response(status = 404)]
-    NotFound(&'r str),
+    NotFound(String),
     #[response(status = 500)]
-    InternalServer(&'r str),
+    InternalServer(String),
 }
 

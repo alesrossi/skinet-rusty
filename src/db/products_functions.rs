@@ -1,13 +1,16 @@
-use diesel::{PgConnection, QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods};
-use rocket::response::status::NotFound;
-use rocket::serde::json::Json;
+use diesel::{QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods};
+
 use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
 use crate::db::schema::products;
 use crate::db::paginate::LoadPaginated;
-use crate::{filter, sort_by};
+use crate::{establish_connection, filter, sort_by};
 use serde::{Serialize};
+use std::{fmt::Formatter, error::Error};
+use error_stack::{IntoReport, ResultExt};
+use crate::db::DbError;
+
 
 #[derive(Debug)]
 pub struct Params {
@@ -28,38 +31,43 @@ pub struct PaginatedResult {
     data: Vec<Product>
 }
 
-pub fn get_product(product_id: i32, connection: &PgConnection) -> Result<Json<Product>, NotFound<String>> {
-    match products::table.find(product_id).first(connection) {
-        Ok(product) => Ok(Json(product)),
-        Err(_) => Err(NotFound(String::from("Product Not Found"))),
-    }
+pub fn get_product(product_id: i32) -> error_stack::Result<Product, DbError> {
+    let connection = establish_connection()?;
+    products::table
+        .find(product_id)
+        .first(&connection)
+        .report()
+        .attach_printable_lazy(|| {format!("Product '{product_id}' not found")})
+        .change_context(DbError::NotFoundError)
 }
 
-pub fn get_brands(connection: &PgConnection) -> Vec<ProductBrand> {
+pub fn get_brands() -> error_stack::Result<Vec<ProductBrand>, DbError> {
+    let connection = establish_connection()?;
     product_brands
-        .load::<ProductBrand>(connection)
-        .expect("Error loading posts")
-
-
+        .load::<ProductBrand>(&connection)
+        .report()
+        .attach_printable_lazy(|| {"Couldn't find brands"})
+        .change_context(DbError::Other)
 }
 
-pub fn get_types(connection: &PgConnection) -> Vec<ProductType> {
+pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
+    let connection = establish_connection()?;
     product_types
-        .load::<ProductType>(connection)
-        .expect("Error loading posts")
+        .load::<ProductType>(&connection)
+        .report()
+        .attach_printable_lazy(|| {"Couldn't find types"})
+        .change_context(DbError::Other)
 
 }
 
-pub fn get_products_with_params(connection: &PgConnection,params: Params) -> PaginatedResult {
+pub fn get_products_with_params(params: Params) -> error_stack::Result<PaginatedResult, DbError> {
+    let connection = establish_connection()?;
     let mut query = products::table.into_boxed();
-
     // filtering
     query = filter!(query,
            (products::name, @like, params.name),
-           (products::productbrand, @ge, params.brand_id),
-           (products::productbrand, @le, params.brand_id),
-           (products::producttype, @ge, params.type_id),
-           (products::producttype, @le, params.type_id)
+           (products::productbrand, @eq, params.brand_id),
+           (products::producttype, @eq, params.type_id)
     );
 
     // sorting
@@ -73,12 +81,16 @@ pub fn get_products_with_params(connection: &PgConnection,params: Params) -> Pag
 
     // result
     let result = query
-        .load_with_pagination(connection, params.page_index, params.page_size).unwrap();
+        .load_with_pagination(&connection, params.page_index, params.page_size)
+        .report()
+        .attach_printable_lazy(|| {"Error during pagination"})
+        .change_context(DbError::Other)?;
 
-    PaginatedResult {
+    Ok(PaginatedResult {
         page_index: params.page_index.unwrap_or_else(|| 1),
         page_size: result.2,
         count: result.0.len(),
         data: result.0
-    }
+    })
 }
+
