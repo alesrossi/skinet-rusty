@@ -1,7 +1,7 @@
 #[allow(unused)]
 use rocket::http::ContentType;
 
-#[derive(Responder)]
+#[derive(Responder, Debug)]
 pub enum ApiError {
     #[response(status = 400)]
     BadRequest(String),

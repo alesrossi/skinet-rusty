@@ -44,7 +44,7 @@ pub fn get_one(id: i32) -> Result<Json<Product>, ApiError> {
             error!("{error:?}");
             match error.current_context() {
                 DbError::NotFoundError => Err(ApiError::NotFound(format!("Product '{id}' not found"))),
-                DbError::Other => Err(ApiError::InternalServer(String::from("Internal Server Error")))
+                _ => Err(ApiError::InternalServer(String::from("Internal Server Error")))
             }
         }
     }

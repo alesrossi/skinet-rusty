@@ -1,3 +1,5 @@
 [env]
 DATABASE_URL="postgres://root:secret@localhost:5433/skinet"
 REDIS_URL="redis://127.0.0.1/"
+TOKEN_KEY="extra super sucret key"
+TOKEN_ISSUER="https://localhost:5001"

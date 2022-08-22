@@ -2,7 +2,6 @@ use rocket::serde::json::{Error, Json};
 use crate::db::redis::*;
 use crate::responders::ApiError;
 use log::{error};
-use serde::de::Unexpected::Str;
 
 #[get("/?<id>")]
 pub fn get_basket_from_id(id: Option<&str>) -> Result<Json<CustomerBasket>, ApiError> {

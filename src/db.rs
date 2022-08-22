@@ -4,6 +4,7 @@ pub mod products_functions;
 pub mod paginate;
 mod macros;
 pub mod redis;
+pub mod identity_functions;
 
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
@@ -22,6 +23,7 @@ pub fn establish_connection() -> error_stack::Result<PgConnection, DbError> {
 #[derive(Debug)]
 pub enum DbError {
     NotFoundError,
+    WrongLoginError,
     Other
 }
 

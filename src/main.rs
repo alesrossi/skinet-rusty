@@ -4,6 +4,9 @@ extern crate diesel;
 extern crate rocket;
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate serde;
+extern crate serde_json;
 use rocket::fs::{FileServer, relative};
 use rocket::http::Method;
 use rocket::Request;
@@ -11,10 +14,13 @@ use rocket_cors::{AllowedHeaders, AllowedOrigins, CorsOptions};
 use crate::db::{establish_connection};
 use crate::products_controller::*;
 use crate::basket_controller::*;
+use crate::identity_controller::*;
 mod db;
 mod products_controller;
 mod basket_controller;
 mod responders;
+mod identity_controller;
+mod jwt;
 
 #[launch]
 fn rocket() -> _ {
@@ -41,14 +47,11 @@ fn rocket() -> _ {
             get_basket_from_id, create_new_basket, delete_basket_from_id
 
         ])
-        .register("/api/basket", catchers![malformed])
+        .mount("/api/account",
+               routes![
+            register_user, login_user
+        ])
         .attach(cors.to_cors().unwrap())
 
 
-}
-
-#[catch(422)]
-fn malformed(req: &Request) -> String {
-    debug!("{req:?}");
-    String::from("wtf")
 }
