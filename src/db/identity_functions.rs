@@ -10,7 +10,7 @@ use jsonwebtoken::{encode, decode, Header, Algorithm, Validation, EncodingKey, D
 use chrono::{DateTime, Duration, Utc};
 use sha_crypt::{sha512_check, sha512_simple, Sha512Params};
 use crate::db::models::AppUser;
-use crate::jwt::generate_token;
+use crate::jwt::{generate_token, UserToken};
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -78,4 +78,32 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
     }
 }
 
+pub fn get_user_from_token(token: UserToken) -> error_stack::Result<UserDto, DbError> {
+    let conn = establish_connection()?;
+    let user: AppUser = app_users
+        .filter(email.eq(token.subject))
+        .first(&conn)
+        .report()
+        .attach_printable_lazy(||{"User related to token was not found on db"})
+        .change_context(DbError::NotFoundError)?;
+    Ok(UserDto {
+        display_name: user.display_name,
+        email: user.email.clone(),
+        token: generate_token(&user.email)?
+    })
+}
 
+pub fn check_email_existence(user_email: &str) -> error_stack::Result<(), DbError> {
+    let conn = establish_connection()?;
+    let user: error_stack::Result<AppUser, DbError> = app_users
+        .filter(email.eq(user_email))
+        .first(&conn)
+        .report()
+        .attach_printable_lazy(|| {"User not found for this email"})
+        .change_context(DbError::NotFoundError);
+
+    match user {
+        Ok(_) => Ok(()),
+        Err(err) => Err(err)
+    }
+}

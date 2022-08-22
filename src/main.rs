@@ -49,7 +49,8 @@ fn rocket() -> _ {
         ])
         .mount("/api/account",
                routes![
-            register_user, login_user
+            register_user, login_user, get_account, check_email_exists
+
         ])
         .attach(cors.to_cors().unwrap())
 
