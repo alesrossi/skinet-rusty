@@ -4,7 +4,6 @@ use crate::responders::ApiError;
 use log::{error};
 use crate::jwt::{Response, UserToken};
 use rocket::response::status;
-use serde::de::Unexpected::Str;
 use crate::db::DbError;
 
 #[post("/register", data= "<register>")]

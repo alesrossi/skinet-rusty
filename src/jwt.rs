@@ -1,12 +1,11 @@
-use chrono::{Duration, Utc};
+use chrono::{Utc};
 use error_stack::{IntoReport, ResultExt};
 use jsonwebtoken::{Algorithm, DecodingKey, encode, EncodingKey, Header, TokenData, Validation};
-use rocket::{Request, request};
+use rocket::{Request};
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome};
 use rocket::response::status;
 use crate::db::DbError;
-use crate::db::identity_functions::RegisterDto;
 use jsonwebtoken::errors::Result;
 use rocket::serde::json::Json;
 use serde_json::Value;
@@ -65,7 +64,7 @@ impl<'r> FromRequest<'r> for UserToken {
 }
 
 pub fn generate_token(email: &String) -> error_stack::Result<String, DbError> {
-    let time = Utc::now().timestamp_nanos() / 1_000_000_000;;
+    let time = Utc::now().timestamp_nanos() / 1_000_000_000;
     let claims = UserToken {
         subject: email.clone(),
         exp: time + ONE_WEEK,

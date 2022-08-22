@@ -1,5 +1,4 @@
 use diesel::{QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods};
-
 use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
@@ -7,10 +6,8 @@ use crate::db::schema::products;
 use crate::db::paginate::LoadPaginated;
 use crate::{establish_connection, filter, sort_by};
 use serde::{Serialize};
-use std::{fmt::Formatter, error::Error};
 use error_stack::{IntoReport, ResultExt};
 use crate::db::DbError;
-
 
 #[derive(Debug)]
 pub struct Params {

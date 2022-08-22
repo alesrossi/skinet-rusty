@@ -1,4 +1,3 @@
-use std::fmt::format;
 use serde::{Serialize, Deserialize};
 use diesel::{ExpressionMethods, insert_into, QueryDsl, RunQueryDsl};
 use error_stack::{IntoReport, ResultExt};
@@ -6,8 +5,6 @@ use crate::db::DbError;
 use crate::db::schema::app_users::dsl::app_users;
 use crate::db::schema::app_users::{displayname, email, password};
 use crate::establish_connection;
-use jsonwebtoken::{encode, decode, Header, Algorithm, Validation, EncodingKey, DecodingKey};
-use chrono::{DateTime, Duration, Utc};
 use sha_crypt::{sha512_check, sha512_simple, Sha512Params};
 use crate::db::models::AppUser;
 use crate::jwt::{generate_token, UserToken};

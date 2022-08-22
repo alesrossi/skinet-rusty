@@ -9,7 +9,6 @@ extern crate serde;
 extern crate serde_json;
 use rocket::fs::{FileServer, relative};
 use rocket::http::Method;
-use rocket::Request;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, CorsOptions};
 use crate::db::{establish_connection};
 use crate::products_controller::*;
