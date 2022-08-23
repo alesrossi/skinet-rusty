@@ -27,7 +27,7 @@ pub struct CustomerBasket {
 
 pub fn connect_redis() -> error_stack::Result<Client, RedisError> {
     simple_redis::create(env!("REDIS_URL"))
-        .report()
+        .into_report()
         .change_context(RedisError)
 }
 
@@ -52,7 +52,7 @@ pub fn create_basket(basket: CustomerBasket) -> error_stack::Result<CustomerBask
     connect_redis()?
         .set(&*basket.id,
              serde_json::to_string(&basket).unwrap().as_str())
-        .report().change_context(RedisError)?;
+        .into_report().change_context(RedisError)?;
     Ok(basket)
 
 }
@@ -60,7 +60,7 @@ pub fn create_basket(basket: CustomerBasket) -> error_stack::Result<CustomerBask
 pub fn delete_basket(key: &str) -> error_stack::Result<(), RedisError> {
     connect_redis()?
         .del(key)
-        .report().change_context(RedisError)
+        .into_report().change_context(RedisError)
 }
 
 #[derive(Debug)]

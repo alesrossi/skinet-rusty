@@ -45,7 +45,7 @@ pub fn register_user_on_db(register_dto: RegisterDto) -> error_stack::Result<Use
              password.eq(hashed_password))
         )
         .execute(&conn)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {format!("Error inserting user {register_dto:?}")})
         .change_context(DbError::Other)?;
 
@@ -61,7 +61,7 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
     let user: AppUser = app_users
         .filter(email.eq(login_dto.email.clone()))
         .first(&conn)
-        .report()
+        .into_report()
         .attach_printable_lazy(||{format!("User '{}' was not found on db", login_dto.email)})
         .change_context(DbError::WrongLoginError)?;
 
@@ -71,7 +71,7 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
             email: user.email.clone(),
             token: generate_token(&user.email)?
         }),
-        Err(_) => Err(DbError::WrongLoginError).report()
+        Err(_) => Err(DbError::WrongLoginError).into_report()
     }
 }
 
@@ -80,7 +80,7 @@ pub fn get_user_from_token(token: UserToken) -> error_stack::Result<UserDto, DbE
     let user: AppUser = app_users
         .filter(email.eq(token.subject))
         .first(&conn)
-        .report()
+        .into_report()
         .attach_printable_lazy(||{"User related to token was not found on db"})
         .change_context(DbError::NotFoundError)?;
     Ok(UserDto {
@@ -95,7 +95,7 @@ pub fn check_email_existence(user_email: &str) -> error_stack::Result<(), DbErro
     let user: error_stack::Result<AppUser, DbError> = app_users
         .filter(email.eq(user_email))
         .first(&conn)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {"User not found for this email"})
         .change_context(DbError::NotFoundError);
 

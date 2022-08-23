@@ -2,3 +2,7 @@
 address = "127.0.0.1"
 port = 5001
 log_level = "debug"
+
+#[default.tls]
+#key = "private/key.pem"     # Path or bytes to DER-encoded ASN.1 PKCS#1/#8 key.
+#certs = "private/certificate.pem-chain" # Path or bytes to DER-encoded X.509 TLS cert chain.

@@ -33,7 +33,7 @@ pub fn get_product(product_id: i32) -> error_stack::Result<Product, DbError> {
     products::table
         .find(product_id)
         .first(&connection)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {format!("Product '{product_id}' not found")})
         .change_context(DbError::NotFoundError)
 }
@@ -42,7 +42,7 @@ pub fn get_brands() -> error_stack::Result<Vec<ProductBrand>, DbError> {
     let connection = establish_connection()?;
     product_brands
         .load::<ProductBrand>(&connection)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {"Couldn't find brands"})
         .change_context(DbError::Other)
 }
@@ -51,7 +51,7 @@ pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
     let connection = establish_connection()?;
     product_types
         .load::<ProductType>(&connection)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {"Couldn't find types"})
         .change_context(DbError::Other)
 
@@ -79,7 +79,7 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
     // result
     let result = query
         .load_with_pagination(&connection, params.page_index, params.page_size)
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {"Error during pagination"})
         .change_context(DbError::Other)?;
 

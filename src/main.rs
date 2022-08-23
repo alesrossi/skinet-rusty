@@ -24,7 +24,7 @@ mod jwt;
 #[launch]
 fn rocket() -> _ {
 
-    let allowed_origins = AllowedOrigins::some_exact(&["https://localhost:4200"]);
+    let allowed_origins = AllowedOrigins::some_exact(&["https://localhost:4200", "https://alessandrorossi.tech:4200"]);
     let cors = CorsOptions {
         allowed_origins,
         allowed_methods: vec![Method::Get, Method::Post, Method::Options, Method::Delete].into_iter().map(From::from).collect(),

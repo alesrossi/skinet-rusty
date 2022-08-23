@@ -72,7 +72,7 @@ pub fn generate_token(email: &String) -> error_stack::Result<String, DbError> {
     };
     let header = Header::new(Algorithm::HS512);
     let token = encode(&header, &claims, &EncodingKey::from_secret(env!("TOKEN_KEY").as_ref()))
-        .report()
+        .into_report()
         .attach_printable_lazy(|| {format!("Error issuing token with header: {header:?}")})
         .change_context(DbError::Other)?;
     Ok(token)
