@@ -48,10 +48,18 @@ fn rocket() -> _ {
         ])
         .mount("/api/account",
                routes![
-            register_user, login_user, get_account, check_email_exists
+            register_user, login_user,
+                   get_account, check_email_exists,
+                   add_address,
+                   get_address
 
         ])
         .attach(cors.to_cors().unwrap())
-
-
 }
+
+// Missing features
+// Async
+// Error handling/Refactoring
+// TLS/Images
+// Foreign keys and unique, Test/Debug
+// Testing

@@ -1,12 +1,15 @@
 use serde::{Serialize, Deserialize};
 use diesel::{ExpressionMethods, insert_into, QueryDsl, RunQueryDsl};
+use diesel::associations::HasTable;
 use error_stack::{IntoReport, ResultExt};
 use crate::db::DbError;
 use crate::db::schema::app_users::dsl::app_users;
-use crate::db::schema::app_users::{displayname, email, password};
+use crate::db::schema::app_users::{address, displayname, email, password};
 use crate::establish_connection;
 use sha_crypt::{sha512_check, sha512_simple, Sha512Params};
-use crate::db::models::AppUser;
+use crate::db::models::{Address, AddressDto, AppUser};
+use crate::db::schema::addresses::dsl::addresses;
+use crate::db::schema::addresses::id;
 use crate::jwt::{generate_token, UserToken};
 
 
@@ -103,4 +106,63 @@ pub fn check_email_existence(user_email: &str) -> error_stack::Result<(), DbErro
         Ok(_) => Ok(()),
         Err(err) => Err(err)
     }
+}
+
+pub fn new_address_to_token(
+    user_address: AddressDto, token: UserToken
+) -> error_stack::Result<AddressDto, DbError> {
+    let conn = establish_connection()?;
+    let mut user: AppUser = app_users
+        .filter(email.eq(token.subject))
+        .first(&conn)
+        .into_report()
+        .attach_printable_lazy(|| {"User not found for this token"})
+        .change_context(DbError::NotFoundError)?;
+
+    let addr: Address = insert_into(addresses)
+        .values(&user_address)
+        .get_result(&conn)
+        .into_report()
+        .attach_printable_lazy(|| {format!("Error inserting address: {:?}", &address)})
+        .change_context(DbError::Other)?;
+
+    user.address = Some(addr.id);
+
+    diesel::update(&user)
+        .set(address.eq(addr.id))
+        .execute(&conn)
+        .into_report()
+        .attach_printable_lazy(|| {"Error updating user"})
+        .change_context(DbError::Other)?;
+    Ok(user_address)
+}
+
+pub fn get_address_from_token(
+    token: UserToken
+) -> error_stack::Result<Option<AddressDto>, DbError> {
+    let conn = establish_connection()?;
+    let user: AppUser = app_users
+        .filter(email.eq(token.subject))
+        .first(&conn)
+        .into_report()
+        .attach_printable_lazy(|| {"User not found for this token"})
+        .change_context(DbError::NotFoundError)?;
+
+    if user.address.is_none() { return Ok(None) }
+
+    let addr: Address = addresses
+        .filter(id.eq(user.address.unwrap()))
+        .first(&conn)
+        .into_report()
+        .attach_printable_lazy(|| {"Address not found in this db"})
+        .change_context(DbError::NotFoundError)?;
+
+    Ok(Some(AddressDto {
+        first_name: addr.first_name,
+        last_name: addr.last_name,
+        street: addr.street,
+        city: addr.city,
+        country: addr.country,
+        postal_code: addr.postal_code
+    }))
 }

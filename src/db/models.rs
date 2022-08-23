@@ -1,5 +1,5 @@
 use serde::{Serialize};
-use crate::db::schema::app_users;
+use crate::db::schema::*;
 
 #[derive(Queryable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -25,7 +25,7 @@ pub struct ProductType {
     pub name: String,
 }
 
-#[derive(Queryable, Insertable, Debug, Serialize)]
+#[derive(Queryable, Identifiable, Insertable, Debug, Serialize)]
 #[table_name = "app_users"]
 pub struct AppUser {
     pub id: i32,
@@ -44,5 +44,20 @@ pub struct Address {
     pub street: String,
     pub city: String,
     pub country: String,
+    pub postal_code: String,
+}
+
+#[derive(Insertable, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[table_name = "addresses"]
+pub struct AddressDto {
+    #[column_name = "firstname"]
+    pub first_name: String,
+    #[column_name = "lastname"]
+    pub last_name: String,
+    pub street: String,
+    pub city: String,
+    pub country: String,
+    #[column_name = "postalcode"]
     pub postal_code: String,
 }

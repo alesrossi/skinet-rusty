@@ -11,7 +11,7 @@ use diesel::pg::PgConnection;
 use std::env;
 use std::{fmt, fmt::Formatter, error::Error};
 use error_stack::{IntoReport, ResultExt};
-use log::{debug};
+
 pub fn establish_connection() -> error_stack::Result<PgConnection, DbError> {
     let database_url = env!("DATABASE_URL").to_string();
     PgConnection::establish(&database_url)

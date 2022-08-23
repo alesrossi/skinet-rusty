@@ -1,4 +1,5 @@
-use diesel::{QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods};
+use diesel::{QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods, debug_query};
+use diesel::pg::Pg;
 use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
@@ -66,7 +67,7 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
            (products::productbrand, @eq, params.brand_id),
            (products::producttype, @eq, params.type_id)
     );
-
+    debug!("QUERY => {}", debug_query::<Pg, _>(&query));
     // sorting
     query = sort_by!(query, params.sort,
             ("id", products::id),
