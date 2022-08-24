@@ -21,6 +21,16 @@ table! {
 }
 
 table! {
+    delivery_methods (id) {
+        id -> Int4,
+        shortname -> Varchar,
+        deliverytime -> Varchar,
+        description -> Varchar,
+        price -> Float4,
+    }
+}
+
+table! {
     product_brands (id) {
         id -> Int4,
         name -> Varchar,
@@ -53,6 +63,7 @@ joinable!(products -> product_types (producttype));
 allow_tables_to_appear_in_same_query!(
     addresses,
     app_users,
+    delivery_methods,
     product_brands,
     product_types,
     products,

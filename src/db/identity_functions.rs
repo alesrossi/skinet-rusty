@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
 use diesel::{ExpressionMethods, insert_into, QueryDsl, RunQueryDsl};
-use diesel::associations::HasTable;
 use error_stack::{IntoReport, ResultExt};
 use crate::db::DbError;
 use crate::db::schema::app_users::dsl::app_users;
@@ -68,7 +67,7 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
         .attach_printable_lazy(||{format!("User '{}' was not found on db", login_dto.email)})
         .change_context(DbError::WrongLoginError)?;
 
-    match sha512_check(&*login_dto.password, &user.password) {
+    match sha512_check(&login_dto.password, &user.password) {
         Ok(_) => Ok(UserDto {
             display_name: user.display_name,
             email: user.email.clone(),

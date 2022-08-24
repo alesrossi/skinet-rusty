@@ -14,12 +14,14 @@ use crate::db::{establish_connection};
 use crate::products_controller::*;
 use crate::basket_controller::*;
 use crate::identity_controller::*;
+use crate::orders_controller::*;
 mod db;
 mod products_controller;
 mod basket_controller;
 mod responders;
 mod identity_controller;
 mod jwt;
+mod orders_controller;
 
 #[launch]
 fn rocket() -> _ {
@@ -54,6 +56,11 @@ fn rocket() -> _ {
                    get_address
 
         ])
+        .mount("/api/orders",
+        routes![
+            get_delivery_methods
+        ]
+        )
         .attach(cors.to_cors().unwrap())
 }
 

@@ -5,6 +5,7 @@ pub mod paginate;
 mod macros;
 pub mod redis;
 pub mod identity_functions;
+pub mod order_functions;
 
 use diesel::prelude::*;
 use diesel::pg::PgConnection;

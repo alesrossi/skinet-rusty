@@ -61,3 +61,12 @@ pub struct AddressDto {
     #[column_name = "postalcode"]
     pub postal_code: String,
 }
+
+#[derive(Queryable, Debug, Serialize)]
+pub struct DeliveryMethod {
+    pub id: i32,
+    pub short_name: String,
+    pub delivery_time: String,
+    pub description: String,
+    pub price: f32
+}

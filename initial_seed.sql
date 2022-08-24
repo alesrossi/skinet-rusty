@@ -180,3 +180,10 @@ values (
            1
        )
 ;
+
+insert into delivery_methods (shortname, deliverytime, description, price)
+values
+    ('UPS1','Fastest delivery time','1-2 Days',10),
+    ('UPS2','Get it within 5 days','2-5 Days',5),
+    ('UPS3','Slower but cheap','5-10 Days',2),
+    ('FREE','Free! You get what you pay for','1-2 Weeks',0);
