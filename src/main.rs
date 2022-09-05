@@ -70,3 +70,4 @@ fn rocket() -> _ {
 // TLS/Images
 // Foreign keys and unique, Test/Debug
 // Testing
+// Rename columns in prod

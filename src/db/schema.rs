@@ -31,9 +31,39 @@ table! {
 }
 
 table! {
+    order_items (id) {
+        id -> Int4,
+        productitemordered -> Int4,
+        price -> Float4,
+        quantity -> Int4,
+        parentorder -> Int4,
+    }
+}
+
+table! {
+    orders (id) {
+        id -> Int4,
+        orderdate -> Timestamp,
+        address -> Int4,
+        deliverymethod -> Int4,
+        subtotal -> Float4,
+        total -> Float4,
+        paymentintentid -> Varchar,
+    }
+}
+
+table! {
     product_brands (id) {
         id -> Int4,
         name -> Varchar,
+    }
+}
+
+table! {
+    product_order_items (id) {
+        id -> Int4,
+        productname -> Varchar,
+        pictureurl -> Varchar,
     }
 }
 
@@ -56,7 +86,9 @@ table! {
     }
 }
 
-joinable!(app_users -> addresses (address));
+joinable!(order_items -> orders (parentorder));
+joinable!(order_items -> product_order_items (productitemordered));
+joinable!(orders -> delivery_methods (deliverymethod));
 joinable!(products -> product_brands (productbrand));
 joinable!(products -> product_types (producttype));
 
@@ -64,7 +96,10 @@ allow_tables_to_appear_in_same_query!(
     addresses,
     app_users,
     delivery_methods,
+    order_items,
+    orders,
     product_brands,
+    product_order_items,
     product_types,
     products,
 );

@@ -1,5 +1,6 @@
 use serde::{Serialize};
 use crate::db::schema::*;
+use chrono::NaiveDateTime;
 
 #[derive(Queryable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -69,4 +70,31 @@ pub struct DeliveryMethod {
     pub delivery_time: String,
     pub description: String,
     pub price: f32
+}
+
+#[derive(Queryable, Debug, Serialize)]
+pub struct Order {
+    pub id: i32,
+    pub order_date: NaiveDateTime,
+    pub address: Address,
+    pub delivery_method: DeliveryMethod,
+    pub subtotal: f32,
+    pub total: f32,
+    pub payment_intent_id: String
+}
+
+#[derive(Queryable, Debug, Serialize)]
+pub struct ProductOrderItem {
+    pub id: i32,
+    pub product_name: String,
+    pub picture_url: String
+}
+
+#[derive(Queryable, Debug, Serialize)]
+pub struct OrderItem {
+    pub id: i32,
+    pub product_item_ordered: ProductOrderItem,
+    pub price: f32,
+    pub quantity: i64,
+    pub parent_order: i32
 }
