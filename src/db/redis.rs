@@ -1,4 +1,5 @@
-use std::{collections::LinkedList, fmt, error::Error};
+use std::{fmt, error::Error};
+use std::collections::linked_list::LinkedList;
 use std::fmt::{Debug, Formatter};
 use error_stack::{IntoReport, ResultExt};
 use serde::{Serialize, Deserialize};
@@ -7,7 +8,7 @@ use simple_redis::client::Client;
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BasketItem {
-    pub id: u64,
+    pub id: i32,
     pub product_name:  String,
     pub price: f32,
     pub quantity: i32,

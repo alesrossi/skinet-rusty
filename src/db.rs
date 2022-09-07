@@ -18,14 +18,13 @@ pub fn establish_connection() -> error_stack::Result<PgConnection, DbError> {
     PgConnection::establish(&database_url)
         .into_report()
         .attach_printable_lazy(|| {format!("Error connecting to database: {database_url}")})
-        .change_context(DbError::Other)
+        .change_context(DbError::ServerError)
 }
 
 #[derive(Debug)]
 pub enum DbError {
     NotFoundError,
-    WrongLoginError,
-    Other
+    ServerError
 }
 
 impl fmt::Display for DbError {

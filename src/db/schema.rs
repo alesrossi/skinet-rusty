@@ -62,6 +62,7 @@ table! {
 table! {
     product_order_items (id) {
         id -> Int4,
+        productid -> Int4,
         productname -> Varchar,
         pictureurl -> Varchar,
     }

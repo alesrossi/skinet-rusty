@@ -45,7 +45,7 @@ pub fn get_brands() -> error_stack::Result<Vec<ProductBrand>, DbError> {
         .load::<ProductBrand>(&connection)
         .into_report()
         .attach_printable_lazy(|| {"Couldn't find brands"})
-        .change_context(DbError::Other)
+        .change_context(DbError::ServerError)
 }
 
 pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
@@ -54,7 +54,7 @@ pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
         .load::<ProductType>(&connection)
         .into_report()
         .attach_printable_lazy(|| {"Couldn't find types"})
-        .change_context(DbError::Other)
+        .change_context(DbError::ServerError)
 
 }
 
@@ -82,7 +82,7 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
         .load_with_pagination(&connection, params.page_index, params.page_size)
         .into_report()
         .attach_printable_lazy(|| {"Error during pagination"})
-        .change_context(DbError::Other)?;
+        .change_context(DbError::ServerError)?;
 
     Ok(PaginatedResult {
         page_index: params.page_index.unwrap_or_else(|| 1),

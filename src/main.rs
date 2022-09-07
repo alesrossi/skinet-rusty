@@ -58,7 +58,8 @@ fn rocket() -> _ {
         ])
         .mount("/api/orders",
         routes![
-            get_delivery_methods
+            get_delivery_methods,
+            post_new_order
         ]
         )
         .attach(cors.to_cors().unwrap())
@@ -71,3 +72,5 @@ fn rocket() -> _ {
 // Foreign keys and unique, Test/Debug
 // Testing
 // Rename columns in prod
+// Caching
+// Add more features

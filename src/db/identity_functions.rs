@@ -49,7 +49,7 @@ pub fn register_user_on_db(register_dto: RegisterDto) -> error_stack::Result<Use
         .execute(&conn)
         .into_report()
         .attach_printable_lazy(|| {format!("Error inserting user {register_dto:?}")})
-        .change_context(DbError::Other)?;
+        .change_context(DbError::ServerError)?;
 
     Ok(UserDto {
         display_name: register_dto.display_name.clone(),
@@ -65,7 +65,7 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
         .first(&conn)
         .into_report()
         .attach_printable_lazy(||{format!("User '{}' was not found on db", login_dto.email)})
-        .change_context(DbError::WrongLoginError)?;
+        .change_context(DbError::ServerError)?;
 
     match sha512_check(&login_dto.password, &user.password) {
         Ok(_) => Ok(UserDto {
@@ -73,7 +73,7 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
             email: user.email.clone(),
             token: generate_token(&user.email)?
         }),
-        Err(_) => Err(DbError::WrongLoginError).into_report()
+        Err(_) => Err(DbError::ServerError).into_report()
     }
 }
 
@@ -123,7 +123,7 @@ pub fn new_address_to_token(
         .get_result(&conn)
         .into_report()
         .attach_printable_lazy(|| {format!("Error inserting address: {:?}", &address)})
-        .change_context(DbError::Other)?;
+        .change_context(DbError::ServerError)?;
 
     user.address = Some(addr.id);
 
@@ -132,7 +132,7 @@ pub fn new_address_to_token(
         .execute(&conn)
         .into_report()
         .attach_printable_lazy(|| {"Error updating user"})
-        .change_context(DbError::Other)?;
+        .change_context(DbError::ServerError)?;
     Ok(user_address)
 }
 

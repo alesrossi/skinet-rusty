@@ -52,7 +52,7 @@ pub fn login_user(
                         Err(err) => {
                             error!("{err:?}");
                             match err.current_context() {
-                                DbError::WrongLoginError =>
+                                DbError::ServerError =>
                                     Err(ApiError::Unauthorized(String::from("Credentials are not correct"))),
                                 _ => Err(ApiError::InternalServer(String::from("Internal Server Error")))
                             }
