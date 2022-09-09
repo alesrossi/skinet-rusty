@@ -1,6 +1,14 @@
+use std::io::Write;
 use serde::{Serialize};
 use crate::db::schema::*;
 use chrono::NaiveDateTime;
+use diesel::serialize::{IsNull, Output, ToSql};
+use diesel::pg::{Pg};
+use diesel::{deserialize, serialize};
+use diesel::backend::Backend;
+use diesel::deserialize::FromSql;
+use diesel::sql_types::Integer;
+
 
 #[derive(Queryable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -37,7 +45,7 @@ pub struct AppUser {
     pub address: Option<i32>,
 }
 
-#[derive(Queryable, Debug, Serialize)]
+#[derive(Queryable, Debug, Serialize, Clone)]
 pub struct Address {
     pub id: i32,
     pub first_name: String,
@@ -48,7 +56,7 @@ pub struct Address {
     pub postal_code: String,
 }
 
-#[derive(Insertable, Debug, Serialize, Deserialize)]
+#[derive(Queryable, Insertable, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "addresses"]
 pub struct AddressDto {
@@ -72,11 +80,52 @@ pub struct DeliveryMethod {
     pub price: f32
 }
 
+
+pub mod exports {
+    pub use super::OrderStatusType as OrderStatus;
+}
+
+#[derive(SqlType)]
+#[postgres(type_name = "Order_status")]
+pub struct OrderStatusType;
+
+#[derive(Debug, FromSqlRow, AsExpression, Serialize, Clone)]
+#[sql_type = "OrderStatusType"]
+pub enum OrderStatus {
+    Pending,
+    PaymentReceived,
+    PaymentFailed,
+}
+
+impl<Db: Backend> ToSql<OrderStatusType, Db> for OrderStatus {
+    fn to_sql<W: Write>(&self, out: &mut Output<W, Db>) -> serialize::Result {
+        match *self {
+            OrderStatus::Pending => out.write_all(b"pending")?,
+            OrderStatus::PaymentReceived => out.write_all(b"paymentreceived")?,
+            OrderStatus::PaymentFailed => out.write_all(b"paymentfailed")?,
+        }
+        Ok(IsNull::No)
+    }
+}
+
+impl FromSql<OrderStatusType, Pg> for OrderStatus {
+    fn from_sql(bytes: Option<&<Pg as Backend>::RawValue>) -> deserialize::Result<Self> {
+        match not_none!(bytes) {
+            b"pending" => Ok(OrderStatus::Pending),
+            b"paymentreceived" => Ok(OrderStatus::PaymentReceived),
+            b"paymentfailed" => Ok(OrderStatus::PaymentFailed),
+            _ => Err("Unrecognized enum variant".into()),
+        }
+    }
+}
+
 #[derive(Queryable, Insertable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "orders"]
 pub struct Order {
     pub id: i32,
+    #[column_name = "buyeremail"]
+    pub buyer_email: String,
     #[column_name = "orderdate"]
     pub order_date: NaiveDateTime,
     pub address: i32,
@@ -84,6 +133,7 @@ pub struct Order {
     pub delivery_method: i32,
     pub subtotal: f32,
     pub total: f32,
+    pub status: OrderStatus,
     #[column_name = "paymentintentid"]
     pub payment_intent_id: String
 }
@@ -107,6 +157,7 @@ pub struct OrderItem {
     pub quantity: i32,
     pub parent_order: i32
 }
+
 
 impl From<Address> for AddressDto {
     fn from(addr: Address) -> Self {

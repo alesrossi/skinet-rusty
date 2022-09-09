@@ -1,4 +1,7 @@
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     addresses (id) {
         id -> Int4,
         firstname -> Varchar,
@@ -11,6 +14,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     app_users (id) {
         id -> Int4,
         displayname -> Varchar,
@@ -21,6 +27,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     delivery_methods (id) {
         id -> Int4,
         shortname -> Varchar,
@@ -31,6 +40,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     order_items (id) {
         id -> Int4,
         productitemordered -> Int4,
@@ -41,18 +53,26 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     orders (id) {
         id -> Int4,
+        buyeremail -> Varchar,
         orderdate -> Timestamp,
         address -> Int4,
         deliverymethod -> Int4,
         subtotal -> Float4,
         total -> Float4,
+        status -> OrderStatus,
         paymentintentid -> Varchar,
     }
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     product_brands (id) {
         id -> Int4,
         name -> Varchar,
@@ -60,6 +80,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     product_order_items (id) {
         id -> Int4,
         productid -> Int4,
@@ -69,6 +92,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     product_types (id) {
         id -> Int4,
         name -> Varchar,
@@ -76,6 +102,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::db::models::exports::*;
+
     products (id) {
         id -> Int4,
         name -> Varchar,

@@ -58,10 +58,8 @@ fn rocket() -> _ {
         ])
         .mount("/api/orders",
         routes![
-            get_delivery_methods,
-            post_new_order
-        ]
-        )
+            get_delivery_methods, post_new_order, get_orders_for_user, get_order_from_id
+        ])
         .attach(cors.to_cors().unwrap())
 }
 
@@ -74,3 +72,4 @@ fn rocket() -> _ {
 // Rename columns in prod
 // Caching
 // Add more features
+// Serve static images
