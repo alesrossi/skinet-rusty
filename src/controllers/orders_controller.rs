@@ -8,7 +8,7 @@ use crate::jwt::{Response, UserToken};
 use crate::responders::ApiError;
 use log::{error};
 
-#[get("/deliveryMethods")]
+#[get("/deliverymethods")]
 pub fn get_delivery_methods() -> Result<Json<Vec<DeliveryMethod>>, ApiError>{
     match get_delivery_methods_from_db() {
         Ok(del_met) => Ok(Json(del_met)),

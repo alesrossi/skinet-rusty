@@ -10,6 +10,7 @@ use jsonwebtoken::errors::Result;
 use rocket::serde::json::Json;
 use serde_json::Value;
 use log::debug;
+
 static ONE_WEEK: i64 = 60 * 60 * 24 * 7; // in seconds
 
 #[derive(Debug, Serialize, Deserialize)]
