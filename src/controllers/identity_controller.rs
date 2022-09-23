@@ -4,7 +4,7 @@ use crate::responders::ApiError;
 use log::{error};
 use crate::jwt::{Response, UserToken};
 use rocket::response::status;
-use crate::db::DbError;
+use crate::db::utils::DbError;
 use crate::db::models::{AddressDto};
 
 #[post("/register", data= "<register>")]

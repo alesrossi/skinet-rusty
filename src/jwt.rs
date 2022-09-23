@@ -5,7 +5,7 @@ use rocket::{Request};
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome};
 use rocket::response::status;
-use crate::db::DbError;
+use crate::db::utils::DbError;
 use jsonwebtoken::errors::Result;
 use rocket::serde::json::Json;
 use serde_json::Value;

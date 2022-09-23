@@ -4,7 +4,7 @@ use crate::db::products_functions::*;
 use crate::db::products_functions::Params;
 use crate::responders::ApiError;
 use log::{error};
-use crate::db::DbError;
+use crate::db::utils::DbError;
 
 #[get("/?<sort>&<brandId>&<typeId>&<name>&<pageIndex>&<pageSize>")]
 pub fn get_all_products

@@ -10,15 +10,16 @@ extern crate serde_json;
 use rocket::fs::{FileServer, relative};
 use rocket::http::Method;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, CorsOptions};
-use crate::db::establish_connection;
 use controllers::products_controller::*;
 use controllers::basket_controller::*;
 use controllers::identity_controller::*;
 use controllers::orders_controller::*;
+
 mod db;
 mod controllers;
 mod responders;
 mod jwt;
+
 
 #[launch]
 fn rocket() -> _ {

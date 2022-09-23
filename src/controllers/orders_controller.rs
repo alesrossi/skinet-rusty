@@ -1,6 +1,6 @@
 use rocket::response::status;
 use rocket::serde::json::{Error, Json};
-use crate::db::DbError;
+use crate::db::utils::DbError;
 use crate::db::identity_functions::get_user_from_token;
 use crate::db::models::DeliveryMethod;
 use crate::db::order_functions::{create_order, get_delivery_methods_from_db, get_post, get_posts, OrderDto, OrderToDisplay, OrderToReturn};

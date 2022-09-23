@@ -1,10 +1,9 @@
 use serde::{Serialize, Deserialize};
 use diesel::{ExpressionMethods, insert_into, QueryDsl, RunQueryDsl};
 use error_stack::{IntoReport, ResultExt};
-use crate::db::DbError;
+use crate::db::utils::{DbError, establish_connection};
 use crate::db::schema::app_users::dsl::app_users;
 use crate::db::schema::app_users::{address, displayname, email, password};
-use crate::establish_connection;
 use sha_crypt::{sha512_check, sha512_simple, Sha512Params};
 use crate::db::models::{Address, AddressDto, AppUser};
 use crate::db::schema::addresses::dsl::addresses;
