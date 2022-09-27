@@ -25,8 +25,6 @@ pub fn products_routes(cfg: &mut web::ServiceConfig) {
     ;
 }
 
-
-
 async fn get_all_products(params_from_path: web::Query<Params>) -> Response {
     let params = params_from_path.into_inner();
     info!("Called get_all_products with params {:?}", params);
@@ -35,7 +33,7 @@ async fn get_all_products(params_from_path: web::Query<Params>) -> Response {
     }).await? {
         Ok(products) => Ok(HttpResponse::Ok().json(products)),
         Err(err) => {
-            error!("err:?");
+            error!("{err:?}");
             Err(error::ErrorInternalServerError("Internal Server Error"))
         },
     }

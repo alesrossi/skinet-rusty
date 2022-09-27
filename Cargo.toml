@@ -16,3 +16,4 @@ actix-files = "0.6.2"
 log = "0.4.17"
 env_logger = "0.9.1"
 error-stack = { git = "https://github.com/hashintel/hash", rev = "10304c" }
+simple_redis = "0.6.1"
