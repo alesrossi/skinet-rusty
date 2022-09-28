@@ -3,16 +3,18 @@ extern crate diesel;
 #[macro_use]
 extern crate log;
 extern crate env_logger;
+extern crate core;
 
 use log::info;
 use actix_web::*;
 use crate::controllers::products_controller::*;
 use crate::controllers::basket_controller::*;
+use crate::controllers::identity_controller::*;
 use actix_web::middleware::{Logger, TrailingSlash};
 use actix_files::Files;
 mod db;
 mod controllers;
-
+mod jwt;
 
 
 #[actix_web::main]
@@ -27,6 +29,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .service(web::scope("/api/products").configure(products_routes))
             .service(web::scope("/api/basket").configure(basket_routes))
+            .service(web::scope("/api/account").configure(account_routes))
             .service(Files::new("/", "./static").index_file("index.html"))
 
     })

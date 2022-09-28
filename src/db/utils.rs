@@ -19,6 +19,7 @@ pub fn establish_connection() -> error_stack::Result<PgConnection, DbError> {
 #[derive(Debug)]
 pub enum DbError {
     NotFoundError,
+    EmailAlreadyInUse,
     ServerError
 }
 

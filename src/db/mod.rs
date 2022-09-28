@@ -1,9 +1,8 @@
 pub mod schema;
 pub mod models;
 pub mod products_functions;
-
-mod paginate;
 pub mod utils;
-mod macros;
 pub mod redis;
-
+pub mod identity_functions;
+mod paginate;
+mod macros;
