@@ -10,6 +10,7 @@ use actix_web::*;
 use crate::controllers::products_controller::*;
 use crate::controllers::basket_controller::*;
 use crate::controllers::identity_controller::*;
+use crate::controllers::orders_controller::*;
 use actix_web::middleware::{Logger, TrailingSlash};
 use actix_files::Files;
 mod db;
@@ -30,6 +31,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::scope("/api/products").configure(products_routes))
             .service(web::scope("/api/basket").configure(basket_routes))
             .service(web::scope("/api/account").configure(account_routes))
+            .service(web::scope("/api/orders").configure(orders_routes))
             .service(Files::new("/", "./static").index_file("index.html"))
 
     })
@@ -37,3 +39,16 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
+
+// FIX PAGINATION
+// Missing features
+// Async
+// Error handling/Refactoring
+// TLS/Images
+// Foreign keys and unique, Test/Debug
+// Testing
+// Rename columns in prod
+// Caching
+// Add more features
+// Serve static images
+// OkAPi
