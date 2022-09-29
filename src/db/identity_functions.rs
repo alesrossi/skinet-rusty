@@ -178,7 +178,7 @@ pub fn get_address_from_token(
         last_name: addr.last_name,
         street: addr.street,
         city: addr.city,
-        country: addr.country,
-        postal_code: addr.postal_code
+        state: addr.state,
+        zip_code: addr.zip_code
     }))
 }

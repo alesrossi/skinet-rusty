@@ -51,8 +51,8 @@ pub struct Address {
     pub last_name: String,
     pub street: String,
     pub city: String,
-    pub country: String,
-    pub postal_code: String,
+    pub state: String,
+    pub zip_code: String,
 }
 
 #[derive(Queryable, Insertable, Debug, Serialize, Deserialize)]
@@ -65,9 +65,9 @@ pub struct AddressDto {
     pub last_name: String,
     pub street: String,
     pub city: String,
-    pub country: String,
-    #[column_name = "postalcode"]
-    pub postal_code: String,
+    pub state: String,
+    #[column_name = "zipcode"]
+    pub zip_code: String,
 }
 
 #[derive(Queryable, Debug, Serialize)]
@@ -165,8 +165,8 @@ impl From<Address> for AddressDto {
             last_name: addr.last_name,
             street: addr.street,
             city: addr.city,
-            country: addr.country,
-            postal_code: addr.postal_code
+            state: addr.state,
+            zip_code: addr.zip_code
         }
     }
 }

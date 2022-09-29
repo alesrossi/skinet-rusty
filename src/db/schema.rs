@@ -5,8 +5,8 @@ table! {
         lastname -> Varchar,
         street -> Varchar,
         city -> Varchar,
-        country -> Varchar,
-        postalcode -> Varchar,
+        state -> Varchar,
+        zipcode -> Varchar,
     }
 }
 
@@ -43,6 +43,7 @@ table! {
 table! {
     use diesel::sql_types::*;
     use crate::db::models::exports::*;
+
 
     orders (id) {
         id -> Int4,

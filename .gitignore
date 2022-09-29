@@ -1,2 +1,5 @@
 /target
 /.idea
+/dist
+/cert.pem
+/key.pem

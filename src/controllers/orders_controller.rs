@@ -17,6 +17,10 @@ pub fn orders_routes(cfg: &mut web::ServiceConfig) {
                 .route(web::get().to(get_delivery_methods))
         )
         .service(
+            web::resource("/deliveryMethods/")
+                .route(web::get().to(get_delivery_methods))
+        )
+        .service(
             web::resource("/{id}/")
                 .route(web::get().to(get_order_from_id))
         )
