@@ -47,7 +47,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::scope("/api/basket").configure(basket_routes))
             .service(web::scope("/api/account").configure(account_routes))
             .service(web::scope("/api/orders").configure(orders_routes))
-            .service(actix_files::Files::new("/","./dist").index_file("index.html"))
+            .service(Files::new("/","./dist").index_file("index.html"))
 
     })
         .bind_openssl((actix_address, actix_port), builder)?
@@ -63,6 +63,6 @@ async fn main() -> std::io::Result<()> {
 // Rename columns in prod
 // Caching
 // Add more features
-// Serve static images
 // OkAPi
 // Errors controller maybe
+// upgrade diesel
