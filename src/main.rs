@@ -55,9 +55,7 @@ async fn main() -> std::io::Result<()> {
         .await
 }
 
-// FIX PAGINATION
 // Missing features
-// Error handling/Refactoring
 // Foreign keys and unique, Test/Debug
 // Testing
 // Rename columns in prod
@@ -66,3 +64,5 @@ async fn main() -> std::io::Result<()> {
 // OkAPi
 // Errors controller maybe
 // upgrade diesel
+// enable payments and stripe
+// Github actions

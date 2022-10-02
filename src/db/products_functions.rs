@@ -90,8 +90,8 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
 
     Ok(PaginatedResult {
         page_index: params.page_index.unwrap_or_else(|| 1),
-        page_size: result.2,
-        count: result.0.len(),
+        page_size: result.1,
+        count: result.2 as usize,
         data: result.0
     })
 }

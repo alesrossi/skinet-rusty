@@ -41,7 +41,7 @@ impl<T> Paginated<T> {
         let total = results.get(0).map(|x| x.1).unwrap_or(0);
         let records = results.into_iter().map(|x| x.0).collect();
         let total_pages = (total as f64 / page_size as f64).ceil() as i64;
-        Ok((records, total_pages, page_size))
+        Ok((records, total_pages, total))
     }
 }
 
