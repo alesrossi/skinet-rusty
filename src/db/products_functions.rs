@@ -89,7 +89,7 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
         .change_context(DbError::ServerError)?;
 
     Ok(PaginatedResult {
-        page_index: params.page_index.unwrap_or_else(|| 1),
+        page_index: params.page_index.unwrap_or(1),
         page_size: result.1,
         count: result.2 as usize,
         data: result.0

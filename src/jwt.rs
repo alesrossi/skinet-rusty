@@ -46,10 +46,10 @@ impl FromRequest for UserToken {
     }
 }
 
-pub fn generate_token(email: &String) -> error_stack::Result<String, DbError> {
+pub fn generate_token(email: &str) -> error_stack::Result<String, DbError> {
     let time = Utc::now().timestamp_nanos() / 1_000_000_000;
     let claims = UserToken {
-        subject: email.clone(),
+        subject: email.to_string(),
         exp: time + ONE_WEEK,
         issuer: env!("TOKEN_ISSUER").parse().unwrap()
     };
@@ -67,4 +67,49 @@ fn decode_token(token: String) -> TokenResult<TokenData<UserToken>> {
     jsonwebtoken::decode::<UserToken>
         (&token, &DecodingKey::from_secret(env!("TOKEN_KEY").as_ref()),
          &val)
+}
+
+#[cfg(test)]
+mod tests {
+    use actix_web::{FromRequest};
+    use actix_web::http::header::ContentType;
+    use actix_web::test::TestRequest;
+    use crate::jwt::{decode_token, generate_token, UserToken};
+
+    #[actix_web::test]
+    async fn from_responder_ok() {
+        let token = "Bearer ".to_owned() + generate_token("test@email.com").unwrap().as_str();
+        let req = TestRequest::default()
+            .insert_header(ContentType::plaintext())
+            .insert_header(("Authorization", token));
+
+
+        let mut req_parts = req.to_http_parts();
+        let res = UserToken::from_request(&req_parts.0, &mut req_parts.1).await;
+        assert_eq!("test@email.com", res.unwrap().subject);
+    }
+
+    #[test]
+    fn decode_token_invalid() {
+        let res = decode_token(String::from("Invalid token"));
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn decode_token_ok() {
+        let token = generate_token("test@email.com").unwrap();
+        let res = decode_token(token);
+        let token_valid = UserToken{
+            subject: "test@email.com".to_string(),
+            exp: 0,
+            issuer: "".to_string()
+        };
+        assert_eq!(res.unwrap().claims.subject, token_valid.subject);
+    }
+
+    #[test]
+    fn generate_token_ok() {
+        assert!(generate_token("test@email.com").is_ok());
+    }
+
 }

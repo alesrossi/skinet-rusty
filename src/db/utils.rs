@@ -28,3 +28,4 @@ impl fmt::Display for DbError {
 }
 
 impl Error for DbError {}
+
