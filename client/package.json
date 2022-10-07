@@ -1,54 +1,35 @@
 {
-  "name": "client",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
-  },
   "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build:css && remix build",
+    "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
+    "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
+    "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css"
+  },
   "dependencies": {
-    "@angular/animations": "~11.2.1",
-    "@angular/cdk": "^11.2.2",
-    "@angular/common": "~11.2.1",
-    "@angular/compiler": "~11.2.1",
-    "@angular/core": "~11.2.1",
-    "@angular/forms": "~11.2.1",
-    "@angular/platform-browser": "~11.2.1",
-    "@angular/platform-browser-dynamic": "~11.2.1",
-    "@angular/router": "~11.2.1",
-    "bootstrap": "^4.6.0",
-    "bootswatch": "^4.6.0",
-    "font-awesome": "^4.7.0",
-    "ngx-bootstrap": "^6.2.0",
-    "ngx-spinner": "^10.0.1",
-    "ngx-toastr": "^13.2.0",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.0.0",
-    "uuid": "^8.3.2",
-    "xng-breadcrumb": "^6.6.0",
-    "zone.js": "~0.11.3"
+    "@remix-run/node": "^1.7.2",
+    "@remix-run/react": "^1.7.2",
+    "@remix-run/serve": "^1.7.2",
+    "flowbite": "^1.5.3",
+    "flowbite-react": "^0.1.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.1",
-    "@angular/cli": "~11.2.1",
-    "@angular/compiler-cli": "~11.2.1",
-    "@types/jasmine": "~3.6.0",
-    "@types/node": "^12.11.1",
-    "codelyzer": "^6.0.0",
-    "jasmine-core": "~3.6.0",
-    "jasmine-spec-reporter": "~5.0.0",
-    "karma": "~6.1.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.0.3",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
-    "protractor": "~7.0.0",
-    "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
-    "typescript": "~4.1.2"
+    "@ionic/prettier-config": "^2.0.0",
+    "@remix-run/dev": "^1.7.2",
+    "@remix-run/eslint-config": "^1.7.2",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "autoprefixer": "^10.4.12",
+    "concurrently": "^7.4.0",
+    "eslint": "^8.23.1",
+    "postcss": "^8.4.17",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
