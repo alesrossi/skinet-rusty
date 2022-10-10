@@ -4,7 +4,7 @@ use diesel::query_builder::*;
 use diesel::query_dsl::LoadQuery;
 use diesel::sql_types::{BigInt, HasSqlType};
 
-const DEFAULT_PAGE_SIZE: i64 = 5;
+pub const DEFAULT_PAGE_SIZE: i64 = 5;
 
 #[derive(QueryId)]
 pub struct Paginated<T> {

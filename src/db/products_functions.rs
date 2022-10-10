@@ -5,7 +5,7 @@ use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
 use crate::db::schema::products;
-use crate::db::paginate::LoadPaginated;
+use crate::db::paginate::{DEFAULT_PAGE_SIZE, LoadPaginated};
 use serde::{Serialize, Deserialize};
 use crate::db::utils::{DbError, establish_connection};
 use crate::{filter, sort_by};
@@ -90,7 +90,7 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
 
     Ok(PaginatedResult {
         page_index: params.page_index.unwrap_or(1),
-        page_size: result.1,
+        page_size: params.page_size.unwrap_or(DEFAULT_PAGE_SIZE),
         count: result.2 as usize,
         data: result.0
     })
