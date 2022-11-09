@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.active {
+    background-color: #ff5a1f;
+}
+
+.hoverable:hover {
+    background-color: #ff5a1f;
+    opacity: 0.6;
+}
+
+th {
+    font-size: x-large;
+}

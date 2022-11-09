@@ -2,6 +2,7 @@ import type {
   Brand,
   PaginatedResponse,
   Product,
+  ProductsParams,
   Type,
 } from "./models";
 
@@ -9,16 +10,35 @@ const DEFAULT_PAGE_INDEX = 1;
 const DEFAULT_PAGE_SIZE = 6;
 
 export async function getProducts(
-  search: string | null
+  params: ProductsParams
 ) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-  let query = "";
-  if (search) {
-    query = `https://alessandrorossi.tech:5001/api/products?sort=name.asc&name=${search}&pageIndex=${DEFAULT_PAGE_INDEX}&pageSize=${DEFAULT_PAGE_SIZE}`;
-  } else {
-    query = `https://alessandrorossi.tech:5001/api/products?sort=name.asc&pageIndex=${DEFAULT_PAGE_INDEX}&pageSize=${DEFAULT_PAGE_SIZE}`;
+
+  let url = new URL(
+    "https://alessandrorossi.tech:5001/api/products?sort=name.asc"
+  );
+  for (const [param, value] of Object.entries(
+    params
+  )) {
+    if (value !== null) {
+      url.searchParams.append(param, value);
+    } else {
+      if (param === "pageIndex") {
+        url.searchParams.append(
+          "pageIndex",
+          DEFAULT_PAGE_INDEX.toString()
+        );
+      }
+      if (param === "pageSize") {
+        url.searchParams.append(
+          "pageSize",
+          DEFAULT_PAGE_SIZE.toString()
+        );
+      }
+    }
   }
-  const response = await fetch(query);
+
+  const response = await fetch(url);
 
   const products: PaginatedResponse =
     await response.json();

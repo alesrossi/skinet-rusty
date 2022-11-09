@@ -1019,6 +1019,13 @@ input:checked + .toggle-bg {
   position: relative;
 }
 
+.inset-0 {
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
 .inset-y-0 {
   top: 0px;
   bottom: 0px;
@@ -1084,20 +1091,12 @@ input:checked + .toggle-bg {
   z-index: 20;
 }
 
-.order-2 {
-  order: 2;
-}
-
 .col-span-1 {
   grid-column: span 1 / span 1;
 }
 
 .col-span-5 {
   grid-column: span 5 / span 5;
-}
-
-.m-7 {
-  margin: 1.75rem;
 }
 
 .-mx-1\.5 {
@@ -1234,8 +1233,8 @@ input:checked + .toggle-bg {
   margin-top: 0.25rem;
 }
 
-.ml-4 {
-  margin-left: 1rem;
+.-mt-2 {
+  margin-top: -0.5rem;
 }
 
 .mb-2 {
@@ -1372,6 +1371,18 @@ input:checked + .toggle-bg {
   height: 14rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
+.h-64 {
+  height: 16rem;
+}
+
+.max-h-\[10\%\] {
+  max-height: 10%;
+}
+
 .w-6 {
   width: 1.5rem;
 }
@@ -1493,6 +1504,10 @@ input:checked + .toggle-bg {
   max-width: 20rem;
 }
 
+.max-w-\[10\%\] {
+  max-width: 10%;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1571,10 +1586,6 @@ input:checked + .toggle-bg {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1631,16 +1642,20 @@ input:checked + .toggle-bg {
   gap: 1rem;
 }
 
-.gap-20 {
-  gap: 5rem;
+.gap-8 {
+  gap: 2rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
 }
 
 .gap-16 {
   gap: 4rem;
 }
 
-.gap-3 {
-  gap: 0.75rem;
+.gap-6 {
+  gap: 1.5rem;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -1921,19 +1936,14 @@ input:checked + .toggle-bg {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
-.border-orange-500 {
+.border-orange-400 {
   --tw-border-opacity: 1;
-  border-color: rgb(255 90 31 / var(--tw-border-opacity));
+  border-color: rgb(255 138 76 / var(--tw-border-opacity));
 }
 
 .border-green-400 {
   --tw-border-opacity: 1;
   border-color: rgb(49 196 141 / var(--tw-border-opacity));
-}
-
-.border-orange-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(255 138 76 / var(--tw-border-opacity));
 }
 
 .\!bg-transparent {
@@ -2127,19 +2137,9 @@ input:checked + .toggle-bg {
   background-color: rgb(255 90 31 / var(--tw-bg-opacity));
 }
 
-.bg-cyan-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(14 116 144 / var(--tw-bg-opacity));
-}
-
 .bg-cyan-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(8 145 178 / var(--tw-bg-opacity));
-}
-
-.bg-blue-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(63 131 248 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-50 {
@@ -2410,6 +2410,10 @@ input:checked + .toggle-bg {
   padding: 0.5rem !important;
 }
 
+.p-3 {
+  padding: 0.75rem;
+}
+
 .py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
@@ -2478,6 +2482,26 @@ input:checked + .toggle-bg {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.py-60 {
+  padding-top: 15rem;
+  padding-bottom: 15rem;
+}
+
+.px-56 {
+  padding-left: 14rem;
+  padding-right: 14rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.py-7 {
+  padding-top: 1.75rem;
+  padding-bottom: 1.75rem;
 }
 
 .pl-0 {
@@ -2560,6 +2584,16 @@ input:checked + .toggle-bg {
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .font-medium {
@@ -2922,6 +2956,19 @@ input:checked + .toggle-bg {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+.active {
+  background-color: #ff5a1f;
+}
+
+.hoverable:hover {
+  background-color: #ff5a1f;
+  opacity: 0.6;
+}
+
+th {
+  font-size: x-large;
+}
+
 .after\:translate-x-full::after {
   content: var(--tw-content);
   --tw-translate-x: 100%;
@@ -3077,19 +3124,14 @@ input:checked + .toggle-bg {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-red-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 82 82 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-orange-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 90 31 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(26 86 219 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-green-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(14 159 110 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-green-400:hover {
@@ -3380,6 +3422,10 @@ input:checked + .toggle-bg {
 
 .group:first-child .group-first\:hidden {
   display: none;
+}
+
+.group:hover .group-hover\:visible {
+  visibility: visible;
 }
 
 .group:hover .group-hover\:bg-blue-200 {

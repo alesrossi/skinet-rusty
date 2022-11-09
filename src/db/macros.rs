@@ -32,7 +32,7 @@ macro_rules! filter {
            $query
        }
    };
-    ($column:expr, @like, $item:expr) => { $column.like( format!("%{}%", $item)) };
+    ($column:expr, @like, $item:expr) => { $column.ilike( format!("%{}%", $item)) };
     ($column:expr, @eq, $item:expr) => { $column.eq($item) };
     ($column:expr, @ge, $item:expr) => { $column.ge($item) };
     ($column:expr, @le, $item:expr) => { $column.le($item) };

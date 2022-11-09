@@ -21,7 +21,10 @@ export function CustomNavbar() {
         >
           Home
         </Navbar.Link>
-        <Navbar.Link href="/navbars">
+        <Navbar.Link
+          style={{ fontSize: "40px" }}
+          href="/navbars"
+        >
           About
         </Navbar.Link>
         <Navbar.Link href="/navbars">

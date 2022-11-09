@@ -1,4 +1,4 @@
-use diesel::{QueryDsl, RunQueryDsl, TextExpressionMethods, ExpressionMethods, debug_query};
+use diesel::{QueryDsl, RunQueryDsl, PgTextExpressionMethods, ExpressionMethods, debug_query};
 use diesel::pg::Pg;
 use error_stack::{IntoReport, ResultExt};
 use crate::db::models::{Product, ProductBrand, ProductType};
@@ -31,7 +31,7 @@ pub struct PaginatedResult {
 }
 
 pub fn get_product(product_id: i32) -> error_stack::Result<Product, DbError> {
-    let connection = establish_connection()?;
+    let connection = establish_connection() ?;
     debug!("Returning product");
     products::table
         .find(product_id)
