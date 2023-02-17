@@ -35,7 +35,7 @@ pub struct UserDto {
 }
 
 pub fn register_user_on_db(register_dto: RegisterDto) -> error_stack::Result<UserDto, DbError>{
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     let params = Sha512Params::new(10_000).expect("RandomError!");
     let hashed_password = sha512_simple(register_dto.password.as_str(), &params)
         .expect("Should not fail");
@@ -51,7 +51,7 @@ pub fn register_user_on_db(register_dto: RegisterDto) -> error_stack::Result<Use
              email.eq(register_dto.email.clone()),
              password.eq(hashed_password))
         )
-        .execute(&conn)
+        .execute(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {format!("Error inserting user {register_dto:?}")})
         .change_context(DbError::ServerError)?;
@@ -64,10 +64,10 @@ pub fn register_user_on_db(register_dto: RegisterDto) -> error_stack::Result<Use
 }
 
 pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbError> {
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     let user: AppUser = app_users
         .filter(email.eq(login_dto.email.clone()))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(||{format!("User '{}' was not found on db", login_dto.email)})
         .change_context(DbError::ServerError)?;
@@ -85,10 +85,10 @@ pub fn login_user_on_db(login_dto: LoginDto) -> error_stack::Result<UserDto, DbE
 }
 
 pub fn get_user_from_token(token: UserToken) -> error_stack::Result<UserDto, DbError> {
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     let user: AppUser = app_users
         .filter(email.eq(token.subject.clone()))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(||{"User related to token was not found on db"})
         .change_context(DbError::NotFoundError)?;
@@ -101,10 +101,10 @@ pub fn get_user_from_token(token: UserToken) -> error_stack::Result<UserDto, DbE
 }
 
 pub fn check_email_existence(user_email: &str) -> error_stack::Result<bool, DbError> {
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     let user: error_stack::Result<AppUser, DbError> = app_users
         .filter(email.eq(user_email))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {"User not found for this email"})
         .change_context(DbError::NotFoundError);
@@ -125,18 +125,18 @@ pub fn check_email_existence(user_email: &str) -> error_stack::Result<bool, DbEr
 pub fn new_address_to_token(
     user_address: AddressDto, token: UserToken
 ) -> error_stack::Result<AddressDto, DbError> {
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     debug!("Attempting to add address to token, {:?}", token);
     let mut user: AppUser = app_users
         .filter(email.eq(token.subject))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {"User not found for this token"})
         .change_context(DbError::NotFoundError)?;
     debug!("Found user {:?}", user);
     let addr: Address = insert_into(addresses)
         .values(&user_address)
-        .get_result(&conn)
+        .get_result(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {format!("Error inserting address: {:?}", &address)})
         .change_context(DbError::ServerError)?;
@@ -145,7 +145,7 @@ pub fn new_address_to_token(
 
     diesel::update(&user)
         .set(address.eq(addr.id))
-        .execute(&conn)
+        .execute(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {"Error updating user"})
         .change_context(DbError::ServerError)?;
@@ -156,10 +156,10 @@ pub fn new_address_to_token(
 pub fn get_address_from_token(
     token: UserToken
 ) -> error_stack::Result<Option<AddressDto>, DbError> {
-    let conn = establish_connection()?;
+    let mut conn = establish_connection()?;
     let user: AppUser = app_users
         .filter(email.eq(token.subject))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {"User not found for this token"})
         .change_context(DbError::NotFoundError)?;
@@ -168,7 +168,7 @@ pub fn get_address_from_token(
 
     let addr: Address = addresses
         .filter(id.eq(user.address.unwrap()))
-        .first(&conn)
+        .first(&mut conn)
         .into_report()
         .attach_printable_lazy(|| {"Address not found in this db"})
         .change_context(DbError::NotFoundError)?;

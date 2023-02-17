@@ -1,5 +1,25 @@
 services:
-  db:
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+      - HTTP_USER=root
+      - HTTP_PASSWORD=secret
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+
+  postgres:
     image: postgres
     restart: always
     environment:
@@ -13,3 +33,14 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+#  app:
+#    image: alesrossi/skinet-sharp:latest
+#    restart: always
+#    depends_on:
+#      - postgres
+#    ports:
+#      - 5000:80
+
+volumes:
+  redis-data:

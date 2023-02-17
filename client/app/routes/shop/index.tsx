@@ -9,9 +9,14 @@ import {
   useLocation,
   useNavigate,
   useSearchParams,
+  useSubmit,
 } from "@remix-run/react";
-import { Pagination } from "flowbite-react";
-import { useState } from "react";
+import {
+  Label,
+  Pagination,
+  Select,
+} from "flowbite-react";
+import { FormEvent, useState } from "react";
 import type {
   Brand,
   PaginatedResponse,
@@ -21,13 +26,15 @@ import type {
 import {
   getBrands,
   getProducts,
+  getSortOptions,
   getTypes,
 } from "~/api/products";
 
-type InitData = {
+type LoaderData = {
   brands: Brand[];
   types: Type[];
   products: PaginatedResponse;
+  sortOptions: { value: string; name: string }[];
 };
 
 const filtering =
@@ -54,17 +61,36 @@ export const loader: LoaderFunction = async ({
   let brands = await getBrands();
   let types = await getTypes();
   let products = await getProducts(params);
+  let sortOptions = await getSortOptions();
 
   return {
-    brands: brands,
-    types: types,
-    products: products,
+    brands,
+    types,
+    products,
+    sortOptions,
   };
 };
 
 export default function Shop() {
-  const initData = useLoaderData<InitData>();
+  let submit = useSubmit();
+  const initData = useLoaderData<LoaderData>();
   const [searchParams] = useSearchParams();
+
+  function handleFormChange(
+    event: React.ChangeEvent<HTMLFormElement>
+  ) {
+    submit(event.currentTarget, {
+      replace: true,
+    });
+  }
+
+  const handleSelect = (selectedValue: any) => {
+    // programmatically submit a useFetcher form in Remix
+    submit(
+      { selected: selectedValue },
+      { method: "post", action: "/" }
+    );
+  };
 
   const changeActive = (
     doc: Document,
@@ -113,10 +139,42 @@ export default function Shop() {
     <Form
       className="grid grid-cols-6 px-6 mx-60"
       method="get"
+      onChange={handleFormChange}
     >
       <div className="col-span-1">
-        <h1>TEST</h1>
-        <div className="py-3 mx-4">
+        <div id="select">
+          <div className="mb-2 block">
+            <Label
+              htmlFor="sorting"
+              value="Select your country"
+            />
+          </div>
+          {/* <input
+            type="hidden"
+            id="sort"
+            name="sort"
+            value={initData.sortOptions[0].value}
+          ></input> */}
+          <Select
+            id="sorting"
+            required={false}
+            onSelect={handleSelect}
+          >
+            {initData.sortOptions.map(
+              (e, key) => {
+                return (
+                  <option
+                    key={key}
+                    value={e.value}
+                  >
+                    {e.name}
+                  </option>
+                );
+              }
+            )}
+          </Select>
+        </div>
+        {/* <div className="py-3 mx-4">
           <h1 className="text-xl text-orange-500 pl-3">
             Brands
           </h1>
@@ -171,7 +229,72 @@ export default function Shop() {
               </Link>
             ))}
           </div>
-        </div>
+        </div> */}
+        {/* <div
+          className="flex flex-col rounded-xl bg-gray-200 p-2"
+          x-data="app"
+        >
+          <div>
+            <input
+              type="radio"
+              name="option"
+              id="1"
+              className="peer hidden"
+              checked
+            />
+            <label
+              htmlFor="1"
+              className="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+            >
+              1
+            </label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="option"
+              id="2"
+              className="peer hidden"
+            />
+            <label
+              htmlFor="2"
+              className="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+            >
+              2
+            </label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="option"
+              id="3"
+              className="peer hidden"
+            />
+            <label
+              htmlFor="3"
+              className="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+            >
+              3
+            </label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="option"
+              id="4"
+              className="peer hidden"
+            />
+            <label
+              htmlFor="4"
+              className="block cursor-pointer select-none rounded-xl p-2 text-center peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white"
+            >
+              4
+            </label>
+          </div>
+        </div> */}
         <div className="py-3 mx-4">
           <h1 className="text-xl text-orange-500 pl-3">
             Types
@@ -251,9 +374,14 @@ export default function Shop() {
           <div className="flex gap-3 py-5">
             <input
               type="text"
-              name="name"
+              name={
+                searchParams.get("name")
+                  ? "name"
+                  : undefined
+              }
               className="border border-black rounded-lg"
               placeholder="Search..."
+              defaultValue={undefined}
             ></input>
             <button
               type="submit"

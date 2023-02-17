@@ -13,9 +13,9 @@ export async function getProducts(
   params: ProductsParams
 ) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
+  console.log("params: ", params);
   let url = new URL(
-    "https://alessandrorossi.tech:5001/api/products?sort=name.asc"
+    "https://alessandrorossi.tech:5001/api/products"
   );
   for (const [param, value] of Object.entries(
     params
@@ -37,7 +37,7 @@ export async function getProducts(
       }
     }
   }
-
+  console.log("url ", url);
   const response = await fetch(url);
 
   const products: PaginatedResponse =
@@ -78,4 +78,18 @@ export async function getTypes(): Promise<
   );
 
   return response.json();
+}
+
+export async function getSortOptions() {
+  return [
+    { name: "Alphabetical", value: "name.desc" },
+    {
+      name: "Price: Low to high",
+      value: "price.asc",
+    },
+    {
+      name: "Price: High to low",
+      value: "price.desc",
+    },
+  ];
 }

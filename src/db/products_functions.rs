@@ -5,7 +5,7 @@ use crate::db::models::{Product, ProductBrand, ProductType};
 use crate::db::schema::product_brands::dsl::product_brands;
 use crate::db::schema::product_types::dsl::product_types;
 use crate::db::schema::products;
-use crate::db::paginate::{DEFAULT_PAGE_SIZE, LoadPaginated};
+use crate::db::paginate::*;
 use serde::{Serialize, Deserialize};
 use crate::db::utils::{DbError, establish_connection};
 use crate::{filter, sort_by};
@@ -31,31 +31,31 @@ pub struct PaginatedResult {
 }
 
 pub fn get_product(product_id: i32) -> error_stack::Result<Product, DbError> {
-    let connection = establish_connection() ?;
+    let mut connection = establish_connection() ?;
     debug!("Returning product");
     products::table
         .find(product_id)
-        .first(&connection)
+        .first(&mut connection)
         .into_report()
         .attach_printable_lazy(|| {format!("Product '{product_id}' not found")})
         .change_context(DbError::NotFoundError)
 }
 
 pub fn get_brands() -> error_stack::Result<Vec<ProductBrand>, DbError> {
-    let connection = establish_connection()?;
+    let mut connection = establish_connection()?;
     debug!("Returning brands");
     product_brands
-        .load::<ProductBrand>(&connection)
+        .load::<ProductBrand>(&mut connection)
         .into_report()
         .attach_printable_lazy(|| {"Error fetching brands"})
         .change_context(DbError::ServerError)
 }
 
 pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
-    let connection = establish_connection()?;
+    let mut connection = establish_connection()?;
     debug!("Returning types");
     product_types
-        .load::<ProductType>(&connection)
+        .load::<ProductType>(&mut connection)
         .into_report()
         .attach_printable_lazy(|| {"Error fetching types"})
         .change_context(DbError::ServerError)
@@ -63,7 +63,7 @@ pub fn get_types() -> error_stack::Result<Vec<ProductType>, DbError> {
 }
 
 pub fn get_products_with_params(params: Params) -> error_stack::Result<PaginatedResult, DbError> {
-    let connection = establish_connection()?;
+    let mut connection = establish_connection()?;
     let mut query = products::table.into_boxed();
     // filtering
     query = filter!(query,
@@ -80,19 +80,23 @@ pub fn get_products_with_params(params: Params) -> error_stack::Result<Paginated
             ("type", products::producttype),
             ("price", products::price)
     );
+    // pagination
+    let mut res = query.paginate(params.page_index.unwrap_or(1));
+    match params.page_size {
+        Some(per_page) => res = res.per_page(per_page),
+        None => res = res.per_page(DEFAULT_PER_PAGE),
+    }
 
-    // result
-    let result = query
-        .load_with_pagination(&connection, params.page_index, params.page_size)
+    let (result, _total_pages) = res.load_and_count_pages::<Product>(&mut connection)
         .into_report()
         .attach_printable_lazy(|| {"Error during pagination"})
         .change_context(DbError::ServerError)?;
 
     Ok(PaginatedResult {
         page_index: params.page_index.unwrap_or(1),
-        page_size: params.page_size.unwrap_or(DEFAULT_PAGE_SIZE),
-        count: result.2 as usize,
-        data: result.0
+        page_size: params.page_size.unwrap_or(DEFAULT_PER_PAGE),
+        count: result.len(),
+        data: result
     })
 }
 
