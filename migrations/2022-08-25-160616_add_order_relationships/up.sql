@@ -1,5 +1,5 @@
 -- Your SQL goes here
-CREATE TYPE order_status AS ENUM ('pending', 'paymentreceived', 'paymentfailed');
+--CREATE TYPE order_status AS ENUM ('pending', 'paymentreceived', 'paymentfailed');
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     buyerEmail VARCHAR NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE orders (
     deliveryMethod INTEGER NOT NULL,
     subtotal REAL NOT NULL,
     total REAL NOT NULL,
-    status order_status NOT NULL,
+    status VARCHAR NOT NULL,
     paymentIntentId VARCHAR NOT NULL,
     CONSTRAINT fk_address
         FOREIGN KEY (address)

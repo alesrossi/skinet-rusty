@@ -3,7 +3,7 @@ use chrono::NaiveDateTime;
 use diesel::{dsl, insert_into, QueryDsl, RunQueryDsl, ExpressionMethods, JoinOnDsl, PgConnection};
 use error_stack::{IntoReport, Report, ResultExt};
 use crate::db::utils::{DbError, establish_connection};
-use crate::db::models::{Address, AddressDto, DeliveryMethod, Order, OrderItem, Product, ProductOrderItem};
+use crate::db::models::{Address, AddressDto, DeliveryMethod, Order, OrderItem, OrderStatus, Product, ProductOrderItem};
 use crate::db::schema::delivery_methods::dsl::delivery_methods;
 use crate::db::schema::delivery_methods as dm;
 use serde::{Serialize, Deserialize};
@@ -38,7 +38,7 @@ pub struct OrderToReturn {
     pub delivery_method: DeliveryMethod,
     pub order_items: LinkedList<OrderItem>,
     pub subtotal: f32,
-    pub status: String,
+    pub status: OrderStatus,
     pub payment_intent_id: String,
 }
 
@@ -53,7 +53,7 @@ pub struct OrderToDisplay {
     pub shipping_price: f32,
     pub order_items: Vec<OrderItem>,
     pub subtotal: f32,
-    pub status: String,
+    pub status: OrderStatus,
     pub total: f32,
 }
 
@@ -99,8 +99,9 @@ pub fn create_order(email: String, order: OrderDto) -> error_stack::Result<Order
              deliverymethod.eq(del.id),
              subtotal.eq(sub_total),
             total.eq(sub_total+del.price),
-                status.eq(String::from("Approved")),
-            paymentintentid.eq(""))
+             paymentintentid.eq(""),
+                status.eq(OrderStatus::Pending))
+
         )
         .get_result(&mut conn)
         .into_report()
@@ -149,7 +150,7 @@ pub fn create_order(email: String, order: OrderDto) -> error_stack::Result<Order
         delivery_method: del,
         order_items: other_order_items,
         subtotal: sub_total,
-        status: String::from("Pending"),
+        status: OrderStatus::Pending,
         payment_intent_id: "".to_string()
     })
 }

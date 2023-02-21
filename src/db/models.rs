@@ -1,8 +1,11 @@
+use std::io::Write;
 use serde::{Serialize, Deserialize};
 use crate::db::schema::*;
 use chrono::NaiveDateTime;
 use diesel::{deserialize, serialize};
 use diesel::deserialize::FromSql;
+use diesel::pg::{Pg, PgValue};
+use diesel::serialize::{ToSql, IsNull, Output};
 
 
 #[derive(Queryable, Debug, Serialize)]
@@ -79,11 +82,11 @@ pub struct DeliveryMethod {
 // pub mod exports {
 //     pub use super::OrderStatusType as OrderStatus;
 // }
-//
+
 // #[derive(SqlType)]
 // #[postgres(type_name = "Order_status")]
 // pub struct OrderStatusType;
-//
+
 // #[derive(Debug, FromSqlRow, AsExpression, Serialize, Clone)]
 // #[sql_type = "OrderStatusType"]
 // pub enum OrderStatus {
@@ -91,6 +94,13 @@ pub struct DeliveryMethod {
 //     PaymentReceived,
 //     PaymentFailed,
 // }
+#[derive(diesel_derive_enum::DbEnum, Debug, Serialize, Deserialize, Clone)]
+#[ExistingTypePath = "crate::db::schema::sql_types::OrderStatus"]
+pub enum OrderStatus {
+    Pending,
+    PaymentReceived,
+    PaymentFailed,
+}
 //
 // impl<Db: Backend> ToSql<OrderStatusType, Db> for OrderStatus {
 //     fn to_sql<W: Write + diesel::backend::Backend>(&self, out: &mut Output<W>) -> serialize::Result {
@@ -114,6 +124,31 @@ pub struct DeliveryMethod {
 //     }
 // }
 
+
+
+
+// impl ToSql<sql_types::OrderStatus, Pg> for OrderStatus {
+//     fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Pg>) -> serialize::Result {
+//         match *self {
+//             OrderStatus::Pending => out.write_all(b"pending")?,
+//             OrderStatus::PaymentReceived => out.write_all(b"paymentreceived")?,
+//             OrderStatus::PaymentFailed => out.write_all(b"paymentfailed")?,
+//         }
+//         Ok(IsNull::No)
+//     }
+// }
+//
+// impl FromSql<sql_types::OrderStatus, Pg> for OrderStatus {
+//     fn from_sql(bytes: PgValue) -> deserialize::Result<Self> {
+//         match bytes.as_bytes() {
+//             b"pending" => Ok(OrderStatus::Pending),
+//             b"paymentreceived" => Ok(OrderStatus::PaymentReceived),
+//             b"paymentfailed" => Ok(OrderStatus::PaymentFailed),
+//             _ => Err("Unrecognized order status".into()),
+//         }
+//     }
+// }
+
 #[derive(Queryable, Insertable, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = orders)]
@@ -128,9 +163,9 @@ pub struct Order {
     pub delivery_method: i32,
     pub subtotal: f32,
     pub total: f32,
-    pub status: String,
     #[diesel(column_name = "paymentintentid")]
-    pub payment_intent_id: String
+    pub payment_intent_id: String,
+    pub status: OrderStatus,
 }
 
 #[derive(Queryable, Insertable, Debug, Serialize)]

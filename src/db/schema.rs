@@ -40,7 +40,16 @@ table! {
     }
 }
 
+pub mod sql_types {
+    #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "order_status"))]
+    pub struct OrderStatus;
+}
+
 table! {
+    use super::sql_types::OrderStatus;
+    use diesel::sql_types::*;
+
     orders (id) {
         id -> Int4,
         buyeremail -> Varchar,
@@ -49,8 +58,8 @@ table! {
         deliverymethod -> Int4,
         subtotal -> Float4,
         total -> Float4,
-        status -> Varchar,
         paymentintentid -> Varchar,
+        status -> OrderStatus,
     }
 }
 
